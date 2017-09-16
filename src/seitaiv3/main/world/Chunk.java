@@ -5,6 +5,6 @@ public class Chunk {
 	int x,y;
 	/**このチャンクのある世界*/
 	World world;
-	/**このチャンクにあるオブジェクト*/
+
 
 }
