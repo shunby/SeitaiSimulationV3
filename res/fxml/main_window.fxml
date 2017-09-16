@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <FlowPane prefHeight="200.0" prefWidth="421.0" BorderPane.alignment="CENTER">
+         <children>
+            <Canvas fx:id="canvas" height="400.0" width="442.0" />
+         </children>
+      </FlowPane>
+   </center>
+   <right>
+      <VBox fx:id="info" prefHeight="400.0" prefWidth="164.0" BorderPane.alignment="CENTER" />
+   </right>
+</BorderPane>
