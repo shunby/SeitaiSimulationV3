@@ -7,12 +7,11 @@ public class Pos {
 	 * */
 	@Deprecated private int x, y;
 
-	private World world;
-
-	public Pos(World w, int x, int y){
-		this.world = w;
-
+	public Pos(int x, int y){
+		set(x, y);
 	}
+
+
 
 
 	/**座標をまとめて設定*/

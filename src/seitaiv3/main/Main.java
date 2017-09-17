@@ -19,6 +19,8 @@ public class Main extends Application{
 	private MainThread mainThread;
 	/**描画処理*/
 	private DrawThread drawThread;
+
+	public boolean isRunning;
 	@Override
 	public void start(Stage stage) throws Exception {
 		//変数初期化-----------
