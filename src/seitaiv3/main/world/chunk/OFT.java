@@ -13,8 +13,12 @@ public class OFT {
 	/**同じ空間に登録されている前のオブジェクト*/
 	private OFT prev;
 
+	public OFT(Stuff obj) {
+		this.object = obj;
+	}
+
 	/**自ら空間を離れる*/
-	public boolean remove(OFT oft){
+	public boolean remove(){
 		//既に離れている
 		if(cell == null)return false;
 		//空間に離脱を通知

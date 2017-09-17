@@ -10,6 +10,12 @@ public class Pos {
 	public Pos(int x, int y){
 		set(x, y);
 	}
+	/**
+	 * @param pos
+	 */
+	public Pos(Pos pos) {
+		this(pos.getX(), pos.getY());
+	}
 
 
 

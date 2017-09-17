@@ -1,5 +1,12 @@
 package seitaiv3.main;
 
+import java.awt.Image;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,7 +25,9 @@ public class Main extends Application{
 	/**メイン処理*/
 	private MainThread mainThread;
 	/**描画処理*/
-	private DrawThread drawThread;
+	private WindowController drawThread;
+	/**描画バッファ*/
+	public List<BufferedImage> buffers;
 
 	public boolean isRunning;
 	@Override
@@ -26,23 +35,63 @@ public class Main extends Application{
 		//変数初期化-----------
 		if(main == null)main = this;
 		this.stage = stage;
-		root = load();
+		buffers = new LinkedList<>();
+		mainThread = new MainThread();
+		drawThread = new WindowController();
+
 		//画面初期化-----------
+		root = load();
 		stage.setScene(new Scene(root));
 		stage.show();
-		//処理部分初期化-------
-		mainThread = new MainThread();
-		drawThread = new DrawThread();
+		stage.setOnCloseRequest((ev)->isRunning = false);
+
 		//実行開始-------------
-		mainThread.run();
-		drawThread.run();
+		isRunning = true;
+		mainThread.start();
+		drawThread.start();
 
 	}
 
 	private Parent load() throws Exception{
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/res/fxml/main_window.fxml"));
-		loader.setController(new WindowController());
+		loader.setController(drawThread);
 		return (Parent)loader.load();
+	}
+
+
+
+	/**エントリポイント*/
+	public static void main(String[] args){
+		launch();
+	}
+
+	//ここからget/set----------------------------------------------------------------------
+
+	public  boolean popFirstBuffer(BufferedImage[] img) {
+		synchronized(buffers){
+			if(buffers.isEmpty())return false;
+			img[0] = buffers.get(0);
+			buffers.remove(0);
+			return true;
+		}
+	}
+
+	public BufferedImage glanceFirstBuffer(){
+		synchronized(buffers){
+			return buffers.get(0);
+		}
+	}
+
+	public int getBufferLength(){
+		synchronized(buffers){
+			return buffers.size();
+		}
+	}
+
+	public void addBuffer(BufferedImage img) {
+		synchronized(buffers){
+			buffers.add(img);
+		}
 	}
 
 	/**Mainのインスタンスを取得*/
@@ -50,8 +99,5 @@ public class Main extends Application{
 		return main;
 	}
 
-	/**エントリポイント*/
-	public static void main(String[] args){
-		launch();
-	}
+
 }

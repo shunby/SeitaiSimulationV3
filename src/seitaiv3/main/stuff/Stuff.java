@@ -1,32 +1,58 @@
 package seitaiv3.main.stuff;
 
+import java.awt.Graphics;
 import java.util.LinkedList;
 import java.util.List;
 
+import javafx.scene.canvas.GraphicsContext;
+import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
-import javafx.scene.shape.Rectangle;
+import seitaiv3.main.world.chunk.Liner4Tree;
+import seitaiv3.main.world.chunk.OFT;
 
-public class Stuff {
+public abstract class Stuff {
 	/**座標*/
-	private int x, y, width, height;
+	protected Pos pos;
+	protected int width;
+	protected int height;
 	/**このオブジェクトのいる世界*/
 	private World world;
 	/**衝突リスト*/
 	private List<Stuff> collidedList;
-
+	/**空間登録用のOFTオブジェクト*/
+	private OFT oft;
 
 	/**
 	 *
 	 */
-	public Stuff() {
+	public Stuff(Pos p, int width, int height, World world) {
+		this.pos = p;
+		this.width = width;
+		this.height = height;
+		this.world = world;
 		collidedList = new LinkedList<>();
+		oft = new OFT(this);
 	}
 
-	public void update(){
+	/**更新処理*/
+	public void update(Graphics g){
+		//衝突判定の更新
+		oft.remove();
+		world.getTree().register(oft);
 
+		//状態の更新
+		onUpdate();
+
+		//バッファに描画
+		draw(g);
+
+		//衝突リストを空に
+		collidedList.clear();
 	}
-
-
+	/**描画処理*/
+	protected abstract void draw(Graphics g);
+	/**状態の更新処理*/
+	protected abstract void onUpdate();
 
 
 	/**衝突リストに加える*/
@@ -37,17 +63,11 @@ public class Stuff {
 
 
 	//ここからgetter/setter----------------------------
-	public int getX() {
-		return x;
+	public Pos getPos() {
+		return pos;
 	}
-	public void setX(int x) {
-		this.x = x;
-	}
-	public int getY() {
-		return y;
-	}
-	public void setY(int y) {
-		this.y = y;
+	public void setPos(Pos p) {
+		this.pos = p;
 	}
 	public int getWidth() {
 		return width;
@@ -66,6 +86,9 @@ public class Stuff {
 	}
 	public void setWorld(World world) {
 		this.world = world;
+	}
+	public OFT getOFT() {
+		return oft;
 	}
 
 
