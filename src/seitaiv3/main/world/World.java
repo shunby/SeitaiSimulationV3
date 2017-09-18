@@ -1,8 +1,13 @@
 package seitaiv3.main.world;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 
+import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.world.chunk.Liner4Tree;
@@ -13,21 +18,27 @@ public class World {
 	/**四分探索木*/
 	private Liner4Tree tree;
 	/**衝突リスト*/
-	private Vector<Stuff> collisionList;
+	private List<Stuff> collisionList;
+	/**オブジェクト*/
+	private List<Stuff> stuffs;
+	/**random*/
+	public Random rand;
 
 	public World(int width, int height){
 		this.width = width;
 		this.height = height;
-		tree = new Liner4Tree(7, this);
-		collisionList = new Vector<>();
+		tree = new Liner4Tree(3, this);
+		collisionList = new ArrayList<>();
+		rand = new Random();
+		stuffs = new LinkedList<>();
 	}
 
 	/**
 	 *
 	 */
-	public void update(Graphics g) {
+	public void update(GraphicsContext g) {
 		collisionCheck();
-		tree.updateStuff(g);
+		stuffs.forEach((stuff)->stuff.update(g));
 	}
 
 
@@ -36,14 +47,37 @@ public class World {
 	/**衝突判定*/
 	private void collisionCheck(){
 		tree.collisionCheck(collisionList);
-		Stuff collider1 = null;
-		Stuff collider2 = null;
-		for(int i = 0; i+1 < collisionList.size(); i+=2){//0と1, 2と3, 2nと(2n+1)が衝突する
-			collider1 = collisionList.get(i);
-			collider2 = collisionList.get(i + 1);
-			collider1.setCollided(collider2);
-			collider2.setCollided(collider1);
+		Stuff c1 = null;
+		Stuff c2 = null;
+		if(collisionList.size() > 0){
+			int i = 0;
+			while(i < collisionList.size()){
+				c1 = collisionList.get(i++);
+				c2 = collisionList.get(i++);
+				if(c1 == null)continue;
+				Pos p1 = c1.getPos();
+				Pos p2 = c2.getPos();
+				int w1 = c1.getWidth();
+				int h1 = c1.getHeight();
+				int w2 = c2.getWidth();
+				int h2 = c2.getHeight();
+
+				//矩形の衝突判定
+				if(Math.abs((p1.getX() - w1 / 2) - (p2.getX() - w2 / 2)) < w1/2 + w2 / 2
+					&&
+					Math.abs((p1.getY() - h1 / 2) - (p2.getY() - h2 / 2)) < h1/2 + h2 / 2
+				){
+					c1.setCollided(c2);
+					c2.setCollided(c1);
+				}
+
+			}
 		}
+	}
+
+	public void registerStuff(Stuff s){
+		tree.register(s.getOFT());
+		stuffs.add(s);
 	}
 
 
@@ -58,6 +92,10 @@ public class World {
 
 	public Liner4Tree getTree() {
 		return tree;
+	}
+
+	public List<Stuff> getStuffs(){
+		return stuffs;
 	}
 
 

@@ -1,10 +1,11 @@
 package seitaiv3.main;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.util.Vector;
+import java.util.Random;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import seitaiv3.main.stuff.living.Living;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
@@ -12,7 +13,7 @@ import seitaiv3.main.world.World;
 /**
  *メインの処理を実行するスレッド
  */
-public class MainThread extends Thread {
+public class MainThread extends Task<Boolean> {
 	/**Main*/
 	private Main main;
 	/**世界*/
@@ -22,37 +23,47 @@ public class MainThread extends Thread {
 
 	public MainThread(){
 		main = Main.get();
-		world = new World(2000, 2000);
-
-		Living l = new Living(new Pos(100, 100), 10, 10, world);
-		world.getTree().register(l.getOFT());
-
-		Living l1 = new Living(new Pos(200, 100), 20, 20, world);
-		world.getTree().register(l1.getOFT());
-
-		Living l2 = new Living(new Pos(100, 200), 50, 50, world);
-		world.getTree().register(l2.getOFT());
+		world = new World(700, 700);
 	}
 
 	@Override
-	public void run(){
-		while(main.isRunning){
-			if(main.getBufferLength() < 100){
-				BufferedImage img = new BufferedImage(700, 700, BufferedImage.TYPE_INT_BGR);
-				Graphics g = img.getGraphics();
-				g.setColor(Color.black);
-				world.update(g);
-				main.addBuffer(img);
-			}
-
-			try {
-				Thread.sleep(8);
-			} catch (InterruptedException e) {
-				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
-			}
+	protected Boolean call() throws Exception {
+		Random r = new Random();
+		for(int i = 0; i < 2000; i++){
+			Living l1 = new Living(new Pos(r.nextInt(400) + 100, r.nextInt(400) + 100), 10, 10, world);
+			world.registerStuff(l1);
 		}
+
+		GraphicsContext g = main.getWindowController().getCanvas().getGraphicsContext2D();
+
+		while (main.isRunning) {
+			Platform.runLater(()->
+			update(g));
+		  try {
+			Thread.sleep(16);
+		  } catch (InterruptedException e) {
+			e.printStackTrace();
+		  }
+		}
+		return true;
 	}
+
+
+	private void update(GraphicsContext g){
+		g.setFill(new Color(160d/255, 82d/255, 45d/255, 1));
+		g.fillRect(0, 0, 700, 700);
+
+		world.update(g);
+	}
+
+	//get/set-----------------------------------------------------------------------
+	public World getWorld(){
+		return world;
+	}
+
+
+
+
 
 
 }

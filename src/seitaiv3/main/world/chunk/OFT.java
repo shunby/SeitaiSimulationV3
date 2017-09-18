@@ -26,7 +26,8 @@ public class OFT {
 
 		if(prev != null)prev.next = next;
 		if(next != null)next.prev = prev;
-
+		next = null;
+		prev = null;
 		cell = null;
 		return true;
 	}

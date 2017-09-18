@@ -1,13 +1,12 @@
 package seitaiv3.main.stuff;
 
-import java.awt.Graphics;
 import java.util.LinkedList;
 import java.util.List;
 
+import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
-import seitaiv3.main.world.chunk.Liner4Tree;
 import seitaiv3.main.world.chunk.OFT;
 
 public abstract class Stuff {
@@ -16,9 +15,9 @@ public abstract class Stuff {
 	protected int width;
 	protected int height;
 	/**このオブジェクトのいる世界*/
-	private World world;
+	protected World world;
 	/**衝突リスト*/
-	private List<Stuff> collidedList;
+	protected List<Stuff> collidedList;
 	/**空間登録用のOFTオブジェクト*/
 	private OFT oft;
 
@@ -32,25 +31,30 @@ public abstract class Stuff {
 		this.world = world;
 		collidedList = new LinkedList<>();
 		oft = new OFT(this);
+
 	}
 
 	/**更新処理*/
-	public void update(Graphics g){
-		//衝突判定の更新
-		oft.remove();
-		world.getTree().register(oft);
+	public void update(GraphicsContext g){
 
 		//状態の更新
 		onUpdate();
-
-		//バッファに描画
+		//位置調整
+		pos.adjust(width, height);
+		//描画
 		draw(g);
 
+		Pos p = new Pos(pos);
 		//衝突リストを空に
 		collidedList.clear();
+		//衝突判定の更新
+		oft.remove();
+		world.getTree().register(oft);
+		pos = new Pos(p);
+
 	}
 	/**描画処理*/
-	protected abstract void draw(Graphics g);
+	protected abstract void draw(GraphicsContext g);
 	/**状態の更新処理*/
 	protected abstract void onUpdate();
 

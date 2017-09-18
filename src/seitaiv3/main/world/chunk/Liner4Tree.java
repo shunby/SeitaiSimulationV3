@@ -41,8 +41,8 @@ public class Liner4Tree {
 		int cells = (areaNum[level + 1]-1)/3;
 		liner4tree = new Cell[cells];
 
-		unitW = (int) (world.getWidth() / Math.pow(2, level));
-		unitH = (int) (world.getHeight() / Math.pow(2, level));
+		unitW = (int) (world.getWidth() / (1 << level));
+		unitH = (int) (world.getHeight() / (1 << level));
 
 	}
 
@@ -61,22 +61,29 @@ public class Liner4Tree {
 	private void createNewCell(int elementNumber) {
 		while(liner4tree[elementNumber] == null){
 			liner4tree[elementNumber] = new Cell();
+			if(elementNumber == 0)break;
 			//親空間の空間番号
-			elementNumber = (elementNumber - 1) / 4;
+			elementNumber = (elementNumber - 1) >> 2;
 			if(elementNumber >= liner4tree.length)break;
 		}
 
 	}
 
-	public void updateStuff(Graphics g){
-		us(0, g);
+	public void updateStuff(GraphicsContext g){
+		if(liner4tree[0] == null)return;
+		int[] a = new int[]{0};
+		us(a,0, g);
+		System.out.println(a[0]);
 	}
 
-	private void us(int elem, Graphics g){
+	private void us(int[] integer,int elem, GraphicsContext g){
 		//空間内のオブジェクトを更新
 		OFT oft1 = liner4tree[elem].getLatest();
 		while(oft1 != null){
 			oft1.getObject().update(g);
+			if(oft1.getObject().toString().equals("pink")){
+				integer[0]++;
+			}
 			oft1 = oft1.getNext();
 		}
 
@@ -85,17 +92,17 @@ public class Liner4Tree {
 		for(int i = 0; i < 4; i++){
 			nextElem = elem * 4 + 1 + i;
 			if(nextElem < liner4tree.length && liner4tree[nextElem] != null){
-				us(nextElem, g);//子空間へ
+				us(integer, nextElem, g);//子空間へ
 			}
 		}
-
+		//System.out.println(integer[0]);
 	}
 
 
 	/**衝突判定リストを作成
 	 * @return リストの長さ
 	 * */
-	public int collisionCheck(Vector<Stuff> vector){
+	public int collisionCheck(List<Stuff> vector){
 		vector.clear();
 		if(liner4tree[0] == null)return 0;
 		List<Stuff> collisionStack = new ArrayList<>();
@@ -107,7 +114,7 @@ public class Liner4Tree {
 	/**
 	 *
 	 */
-	private boolean getCollisionList(int elem, Vector<Stuff> vector,
+	private boolean getCollisionList(int elem, List<Stuff> vector,
 			List<Stuff> collisionStack) {
 		//空間内のオブジェクト同士で判定
 		OFT oft1 = liner4tree[elem].getLatest();
@@ -161,9 +168,9 @@ public class Liner4Tree {
 	/**矩形のモートン番号(線形)*/
 	public int getLinerMortonNumber(Stuff s){
 		//左上のモートン番号
-		int topleft = get2DMortonNumber(new Pos(s.getPos()));
+		int topleft = getPointToElemNum(new Pos(s.getPos().getX() - s.getWidth() / 2, s.getPos().getY() - s.getHeight() / 2));
 		//右下のモートン番号
-		int bottomright = get2DMortonNumber(new Pos(s.getPos().getX() + s.getWidth(), s.getPos().getY() + s.getHeight()));
+		int bottomright = getPointToElemNum(new Pos(s.getPos().getX() + s.getWidth() / 2, s.getPos().getY() + s.getHeight() / 2));
 
 		//右上・左下の排他的論理和
 		int xor = topleft ^ bottomright;
@@ -180,7 +187,8 @@ public class Liner4Tree {
 
 		int area_num = bottomright >> (hi_level * 2);
 		//線形四分木の番号 = 等比級数の和 + 空間番号
-		int liner_area_num = (int) ((Math.pow(4, area_level) - 1)/3) + area_num;
+		int liner_area_num = (int) ((areaNum[area_level] - 1)/3) + area_num;
+		if(area_num > liner4tree.length)return 0xffffffff;
 		return liner_area_num;
 	}
 
@@ -201,6 +209,14 @@ public class Liner4Tree {
 		return get2DMortonNumber(p.getX(), p.getY());
 	}
 
+	/**座標から線形四分木要素番号*/
+	public int getPointToElemNum(int x, int y){
+		return get2DMortonNumber(x/unitW, y/unitH);
+	}
+	/**座標から線形四分木要素番号*/
+	public int getPointToElemNum(Pos p){
+		return getPointToElemNum(p.getX(), p.getY());
+	}
 }
 
 

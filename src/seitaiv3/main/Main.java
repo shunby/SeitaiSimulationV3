@@ -1,11 +1,5 @@
 package seitaiv3.main;
 
-import java.awt.Image;
-import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -24,10 +18,8 @@ public class Main extends Application{
 	private Stage stage;
 	/**メイン処理*/
 	private MainThread mainThread;
-	/**描画処理*/
-	private WindowController drawThread;
-	/**描画バッファ*/
-	public List<BufferedImage> buffers;
+	/**window*/
+	private WindowController wController;
 
 	public boolean isRunning;
 	@Override
@@ -35,9 +27,8 @@ public class Main extends Application{
 		//変数初期化-----------
 		if(main == null)main = this;
 		this.stage = stage;
-		buffers = new LinkedList<>();
 		mainThread = new MainThread();
-		drawThread = new WindowController();
+		wController = new WindowController();
 
 		//画面初期化-----------
 		root = load();
@@ -47,14 +38,14 @@ public class Main extends Application{
 
 		//実行開始-------------
 		isRunning = true;
-		mainThread.start();
-		drawThread.start();
+		Thread th = new Thread(mainThread);
+		th.start();
 
 	}
 
 	private Parent load() throws Exception{
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/res/fxml/main_window.fxml"));
-		loader.setController(drawThread);
+		loader.setController(wController);
 		return (Parent)loader.load();
 	}
 
@@ -66,38 +57,17 @@ public class Main extends Application{
 	}
 
 	//ここからget/set----------------------------------------------------------------------
-
-	public  boolean popFirstBuffer(BufferedImage[] img) {
-		synchronized(buffers){
-			if(buffers.isEmpty())return false;
-			img[0] = buffers.get(0);
-			buffers.remove(0);
-			return true;
-		}
-	}
-
-	public BufferedImage glanceFirstBuffer(){
-		synchronized(buffers){
-			return buffers.get(0);
-		}
-	}
-
-	public int getBufferLength(){
-		synchronized(buffers){
-			return buffers.size();
-		}
-	}
-
-	public void addBuffer(BufferedImage img) {
-		synchronized(buffers){
-			buffers.add(img);
-		}
-	}
-
 	/**Mainのインスタンスを取得*/
 	public static Main get(){
 		return main;
 	}
 
+	public MainThread getMainThread(){
+		return mainThread;
+	}
+
+	public WindowController getWindowController(){
+		return wController;
+	}
 
 }

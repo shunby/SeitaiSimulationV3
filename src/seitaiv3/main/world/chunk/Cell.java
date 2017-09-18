@@ -24,7 +24,6 @@ public class Cell {
 
 	/**OFT離脱時の処理*/
 	public boolean onRemove(OFT oft) {
-		if(oft.getCell() != this)return false;
 		//最新OFTが離脱するか確認
 		if(latest == oft)latest = oft.getNext();
 		length--;
