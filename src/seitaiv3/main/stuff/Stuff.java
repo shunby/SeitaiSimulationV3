@@ -1,10 +1,10 @@
 package seitaiv3.main.stuff;
 
+import java.awt.Graphics2D;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javafx.application.Platform;
-import javafx.scene.canvas.GraphicsContext;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
 import seitaiv3.main.world.chunk.OFT;
@@ -12,6 +12,11 @@ import seitaiv3.main.world.chunk.OFT;
 public abstract class Stuff {
 	/**座標*/
 	protected Pos pos;
+	/**速度*/
+	protected Vector speed;
+	/**加速度*/
+	protected Vector accel;
+
 	protected int width;
 	protected int height;
 	/**このオブジェクトのいる世界*/
@@ -21,43 +26,62 @@ public abstract class Stuff {
 	/**空間登録用のOFTオブジェクト*/
 	private OFT oft;
 
+
 	/**
 	 *
 	 */
 	public Stuff(Pos p, int width, int height, World world) {
-		this.pos = p;
+		this.pos = new Pos(p);
 		this.width = width;
 		this.height = height;
 		this.world = world;
-		collidedList = new LinkedList<>();
+		this.speed = new Vector();
+		this.accel = new Vector();
+		collidedList = new ArrayList<>();
 		oft = new OFT(this);
 
 	}
 
-	/**更新処理*/
-	public void update(GraphicsContext g){
+	/**最初の更新処理
+	 * 他のオブジェクトに伝えるべきこととかあればここに
+	 * 順番的には
+	 * setCollided->preUpdate->update->draw->postUpdate
+	 * */
+	public void preUpdate(){
+		//速度による位置の変更
+		updateVector();
+	}
 
-		//状態の更新
-		onUpdate();
-		//位置調整
-		pos.adjust(width, height);
-		//描画
-		draw(g);
-
-		Pos p = new Pos(pos);
-		//衝突リストを空に
-		collidedList.clear();
-		//衝突判定の更新
-		oft.remove();
-		world.getTree().register(oft);
-		pos = new Pos(p);
+	/**二巡目の更新処理
+	 * 基本的にここに処理を書く
+	 * */
+	public void update(){
 
 	}
-	/**描画処理*/
-	protected abstract void draw(GraphicsContext g);
-	/**状態の更新処理*/
-	protected abstract void onUpdate();
 
+	/**三巡目の更新処理
+	 * 他の状態を見て判断することとか描画の後にやりたいこととかがあればここに
+	 * */
+	public void postUpdate(){
+		//衝突関係の更新
+		updateCollision();
+	}
+
+
+	/**速度・加速度の変更*/
+	protected void updateVector(){
+		speed.add(accel);
+		pos.add(speed);
+	}
+	/**衝突関係の更新*/
+	protected void updateCollision(){
+		collidedList.clear();
+		oft.remove();
+		world.getTree().register(oft);
+	}
+
+	/**描画処理*/
+	public abstract void draw(Graphics2D g);
 
 	/**衝突リストに加える*/
 	public void setCollided(Stuff collider) {
@@ -67,6 +91,13 @@ public abstract class Stuff {
 
 
 	//ここからgetter/setter----------------------------
+
+	public Vector getAccel(){
+		return accel;
+	}
+	public Vector getSpeed(){
+		return speed;
+	}
 	public Pos getPos() {
 		return pos;
 	}

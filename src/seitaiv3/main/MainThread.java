@@ -1,11 +1,16 @@
 package seitaiv3.main;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.image.WritableImage;
 import seitaiv3.main.stuff.living.Living;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
@@ -18,47 +23,71 @@ public class MainThread extends Task<Boolean> {
 	private Main main;
 	/**世界*/
 	private World world;
-
-
+	/**ループ回数*/
+	private int time;
 
 	public MainThread(){
 		main = Main.get();
-		world = new World(700, 700);
+		world = new World(3000, 3000);
 	}
 
 	@Override
-	protected Boolean call() throws Exception {
+	protected Boolean call(){
+
 		Random r = new Random();
-		for(int i = 0; i < 2000; i++){
-			Living l1 = new Living(new Pos(r.nextInt(400) + 100, r.nextInt(400) + 100), 10, 10, world);
+		for(int i = 0; i < 1000; i++){
+			Living l1 = new Living(new Pos(r.nextInt(2500) + 100, r.nextInt(2500) + 100), 10, 10, world);
 			world.registerStuff(l1);
 		}
 
-		GraphicsContext g = main.getWindowController().getCanvas().getGraphicsContext2D();
-
+		//Graphics2D g = main.getWindowController().getCanvas().getGraphicsContext2D();
+		BufferedImage img = new BufferedImage(700, 700, BufferedImage.TYPE_INT_ARGB);
+		WritableImage wimg = new WritableImage(700, 700);
+		Graphics2D g = (Graphics2D)img.getGraphics();
+		Color bgColor = new Color(160, 82, 45);
+		GraphicsContext g2 = main.getWindowController().getCanvas().getGraphicsContext2D();
 		while (main.isRunning) {
-			Platform.runLater(()->
-			update(g));
-		  try {
-			Thread.sleep(16);
-		  } catch (InterruptedException e) {
-			e.printStackTrace();
-		  }
+				update(wimg, img, g, g2, bgColor);
+			try {
+				Thread.sleep(16);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		return true;
 	}
 
 
-	private void update(GraphicsContext g){
-		g.setFill(new Color(160d/255, 82d/255, 45d/255, 1));
-		g.fillRect(0, 0, 700, 700);
+	private void update(WritableImage wimg, BufferedImage img, Graphics2D g, GraphicsContext g2, Color bgColor){
+		try{
+			time++;
 
-		world.update(g);
+			if(time % 2000 == 0){
+				System.out.println("Running Garbage Collection");
+				System.gc();
+			}
+
+			g.setColor(bgColor);
+			g.fillRect(0, 0, 700, 700);
+			world.update(g);
+			SwingFXUtils.toFXImage(img, wimg);
+
+			Platform.runLater(()->{
+				g2.drawImage(wimg, 0, 0);
+				main.getWindowController().updateUI(this);
+			});
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
 	}
 
 	//get/set-----------------------------------------------------------------------
 	public World getWorld(){
 		return world;
+	}
+
+	public int getTime(){
+		return this.time;
 	}
 
 

@@ -1,14 +1,9 @@
 package seitaiv3.main.world;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.Vector;
-
-import javafx.application.Platform;
-import javafx.scene.canvas.GraphicsContext;
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.world.chunk.Liner4Tree;
 
@@ -23,6 +18,8 @@ public class World {
 	private List<Stuff> stuffs;
 	/**random*/
 	public Random rand;
+	/**カメラ*/
+	private Pos camera;
 
 	public World(int width, int height){
 		this.width = width;
@@ -30,15 +27,23 @@ public class World {
 		tree = new Liner4Tree(3, this);
 		collisionList = new ArrayList<>();
 		rand = new Random();
-		stuffs = new LinkedList<>();
+		stuffs = new ArrayList<>();
+		camera = new Pos(this,0, 0);
 	}
 
 	/**
 	 *
 	 */
-	public void update(GraphicsContext g) {
+	public void update(Graphics2D g) {
 		collisionCheck();
-		stuffs.forEach((stuff)->stuff.update(g));
+		stuffs.forEach((stuff)->stuff.preUpdate());
+		stuffs.forEach((stuff)->stuff.update());
+		stuffs.forEach((stuff)->{
+			//描画
+			if(isInCamera(stuff.getPos()))stuff.draw(g);
+		});
+		stuffs.forEach((stuff)->stuff.postUpdate());
+
 	}
 
 
@@ -47,6 +52,10 @@ public class World {
 	/**衝突判定*/
 	private void collisionCheck(){
 		tree.collisionCheck(collisionList);
+
+
+
+
 		Stuff c1 = null;
 		Stuff c2 = null;
 		if(collisionList.size() > 0){
@@ -63,16 +72,20 @@ public class World {
 				int h2 = c2.getHeight();
 
 				//矩形の衝突判定
+
 				if(Math.abs((p1.getX() - w1 / 2) - (p2.getX() - w2 / 2)) < w1/2 + w2 / 2
 					&&
 					Math.abs((p1.getY() - h1 / 2) - (p2.getY() - h2 / 2)) < h1/2 + h2 / 2
 				){
+
 					c1.setCollided(c2);
 					c2.setCollided(c1);
 				}
 
+
 			}
 		}
+
 	}
 
 	public void registerStuff(Stuff s){
@@ -82,6 +95,18 @@ public class World {
 
 
 	//ここからget/set-------------------------------
+	public Pos getCamera(){
+		return camera;
+	}
+
+	public boolean isInCamera(Pos p){
+		int x = p.getX();
+		int y = p.getY();
+		int cx = camera.getX();
+		int cy = camera.getY();
+		return cx <= x && x <= cx + 700 && cy <= y && y <= cy + 700;
+	}
+
 	public int getWidth() {
 		return width;
 	}

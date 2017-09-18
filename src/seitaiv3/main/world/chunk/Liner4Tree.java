@@ -1,14 +1,10 @@
 package seitaiv3.main.world.chunk;
 
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
-
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
-import javafx.scene.canvas.GraphicsContext;
 
 
 public class Liner4Tree {
@@ -25,12 +21,15 @@ public class Liner4Tree {
 	private World world;
 	/**最小区分の小空間の大きさ*/
 	private int unitW, unitH;
+	/**衝突スタック*/
+	List<Stuff> collisionStack;
 
 	public Liner4Tree(int level, World world){
 		if(level > MAX_LEVEL+1)throw new IllegalArgumentException();
 		this.level = level;
 		this.world = world;
 		areaNum = new int[MAX_LEVEL+1];
+		collisionStack = new ArrayList<>();
 
 
 		//ルート階層の空間数は１
@@ -69,35 +68,6 @@ public class Liner4Tree {
 
 	}
 
-	public void updateStuff(GraphicsContext g){
-		if(liner4tree[0] == null)return;
-		int[] a = new int[]{0};
-		us(a,0, g);
-		System.out.println(a[0]);
-	}
-
-	private void us(int[] integer,int elem, GraphicsContext g){
-		//空間内のオブジェクトを更新
-		OFT oft1 = liner4tree[elem].getLatest();
-		while(oft1 != null){
-			oft1.getObject().update(g);
-			if(oft1.getObject().toString().equals("pink")){
-				integer[0]++;
-			}
-			oft1 = oft1.getNext();
-		}
-
-		//子空間に移動
-		int nextElem;
-		for(int i = 0; i < 4; i++){
-			nextElem = elem * 4 + 1 + i;
-			if(nextElem < liner4tree.length && liner4tree[nextElem] != null){
-				us(integer, nextElem, g);//子空間へ
-			}
-		}
-		//System.out.println(integer[0]);
-	}
-
 
 	/**衝突判定リストを作成
 	 * @return リストの長さ
@@ -105,7 +75,7 @@ public class Liner4Tree {
 	public int collisionCheck(List<Stuff> vector){
 		vector.clear();
 		if(liner4tree[0] == null)return 0;
-		List<Stuff> collisionStack = new ArrayList<>();
+		collisionStack.clear();
 		getCollisionList(0, vector, collisionStack);
 		return vector.size();
 	}
@@ -127,10 +97,11 @@ public class Liner4Tree {
 				oft2 = oft2.getNext();
 			}
 			//衝突スタックとの衝突リスト作成
-			for(int i = 0; i < collisionStack.size(); i++){
-				vector.add(oft1.getObject());
-				vector.add(collisionStack.get(i));
-			}
+			Stuff object = oft1.getObject();
+			collisionStack.forEach((oft)->{
+				vector.add(object);
+				vector.add(oft);
+			});
 			oft1 = oft1.getNext();
 		}
 
@@ -168,9 +139,9 @@ public class Liner4Tree {
 	/**矩形のモートン番号(線形)*/
 	public int getLinerMortonNumber(Stuff s){
 		//左上のモートン番号
-		int topleft = getPointToElemNum(new Pos(s.getPos().getX() - s.getWidth() / 2, s.getPos().getY() - s.getHeight() / 2));
+		int topleft = getPointToElemNum(s.getPos().getX() - s.getWidth() / 2, s.getPos().getY() - s.getHeight() / 2);
 		//右下のモートン番号
-		int bottomright = getPointToElemNum(new Pos(s.getPos().getX() + s.getWidth() / 2, s.getPos().getY() + s.getHeight() / 2));
+		int bottomright = getPointToElemNum(s.getPos().getX() + s.getWidth() / 2, s.getPos().getY() + s.getHeight() / 2);
 
 		//右上・左下の排他的論理和
 		int xor = topleft ^ bottomright;

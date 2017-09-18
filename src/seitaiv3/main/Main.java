@@ -35,6 +35,7 @@ public class Main extends Application{
 		stage.setScene(new Scene(root));
 		stage.show();
 		stage.setOnCloseRequest((ev)->isRunning = false);
+		wController.initWindow();
 
 		//実行開始-------------
 		isRunning = true;
