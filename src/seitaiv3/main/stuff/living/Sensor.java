@@ -3,6 +3,7 @@
  */
 package seitaiv3.main.stuff.living;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 import seitaiv3.main.stuff.Stuff;
@@ -24,18 +25,19 @@ public class Sensor extends Stuff {
 
 	@Override
 	public void draw(Graphics2D g) {
-//		g.setColor(Color.green);
-//		g.drawRect(pos.getX() - width / 2, pos.getY() - height / 2, width, height);
+		g.setColor(!collidedList.isEmpty() ? Color.RED :  Color.green);
+		g.drawRect(pos.getX() - width / 2, pos.getY() - height / 2, width, height);
 	}
 
 	@Override
 	public void update() {
+		super.update();
 		this.pos.set(living.getPos());
 	}
 
 	@Override
 	public void setCollided(Stuff collider) {
-		super.setCollided(collider);
+		if(collider != living)super.setCollided(collider);
 		if(collider != living && !(collider instanceof Sensor))living.sensored(collider);
 	}
 

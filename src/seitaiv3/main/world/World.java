@@ -35,8 +35,8 @@ public class World {
 	 *
 	 */
 	public void update(Graphics2D g) {
-		collisionCheck();
 		stuffs.forEach((stuff)->stuff.preUpdate());
+		collisionCheck();
 		stuffs.forEach((stuff)->stuff.update());
 		stuffs.forEach((stuff)->{
 			//描画
@@ -73,9 +73,9 @@ public class World {
 
 				//矩形の衝突判定
 
-				if(Math.abs((p1.getX() - w1 / 2) - (p2.getX() - w2 / 2)) < w1/2 + w2 / 2
+				if((Math.abs(p1.getX() - p2.getX()) < (w1+ w2) / 2)
 					&&
-					Math.abs((p1.getY() - h1 / 2) - (p2.getY() - h2 / 2)) < h1/2 + h2 / 2
+					(Math.abs(p1.getY() - p2.getY()) < (h1 + h2) / 2)
 				){
 
 					c1.setCollided(c2);

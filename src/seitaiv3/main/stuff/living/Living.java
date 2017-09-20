@@ -11,7 +11,6 @@ import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
 
 public class Living extends Stuff {
-	boolean iscollided;
 	Sensor sensor;
 	List<Stuff> sensoredList;
 
@@ -25,13 +24,12 @@ public class Living extends Stuff {
 
 	@Override
 	public void update() {
-		if(iscollided){
-			speed.set(world.rand.nextInt(5) - 2, world.rand.nextInt(5) - 2);
-		}
+		super.update();
 	}
 
 	@Override
 	public void postUpdate() {
+		super.postUpdate();
 		sensoredList.clear();
 	}
 
@@ -47,6 +45,7 @@ public class Living extends Stuff {
 	public void sensored(Stuff collider) {
 		sensoredList.add(collider);
 	}
+
 
 
 

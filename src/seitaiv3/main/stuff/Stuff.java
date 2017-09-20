@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import seitaiv3.main.stuff.living.Sensor;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
 import seitaiv3.main.world.chunk.OFT;
@@ -45,7 +46,7 @@ public abstract class Stuff {
 	/**最初の更新処理
 	 * 他のオブジェクトに伝えるべきこととかあればここに
 	 * 順番的には
-	 * setCollided->preUpdate->update->draw->postUpdate
+	 * preUpdate->setCollided->update->draw->postUpdate
 	 * */
 	public void preUpdate(){
 		//速度による位置の変更
@@ -85,7 +86,7 @@ public abstract class Stuff {
 
 	/**衝突リストに加える*/
 	public void setCollided(Stuff collider) {
-		collidedList.add(collider);
+		if(!(collider instanceof Sensor))collidedList.add(collider);
 	}
 
 

@@ -1,7 +1,9 @@
 package seitaiv3.main.world.chunk;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
@@ -28,16 +30,22 @@ public class Liner4Tree {
 		if(level > MAX_LEVEL+1)throw new IllegalArgumentException();
 		this.level = level;
 		this.world = world;
-		areaNum = new int[MAX_LEVEL+1];
+
 		collisionStack = new ArrayList<>();
 
 
 		//ルート階層の空間数は１
-		areaNum[0] = 1;
-		for(int i = 1; i < MAX_LEVEL+1; i++){
-			areaNum[i] = areaNum[i-1] * 4;
+		int[] areaNumTmp = new int[level + 2];
+		areaNumTmp[0] = 1;
+		for(int i = 1; i < level+2; i++){
+			areaNumTmp[i] = areaNumTmp[i-1] * 4;
 		}
-		int cells = (areaNum[level + 1]-1)/3;
+		areaNum = new int[level+2];
+		for(int i = 0; i < level + 2;i++){
+			areaNum[i] = (areaNumTmp[i]-1)/3;
+		}
+
+		int cells = areaNum[level + 1];
 		liner4tree = new Cell[cells];
 
 		unitW = (int) (world.getWidth() / (1 << level));
@@ -62,7 +70,7 @@ public class Liner4Tree {
 			liner4tree[elementNumber] = new Cell();
 			if(elementNumber == 0)break;
 			//親空間の空間番号
-			elementNumber = (elementNumber - 1) >> 2;
+			elementNumber = (elementNumber - 1) >>> 2;
 			if(elementNumber >= liner4tree.length)break;
 		}
 
@@ -149,17 +157,17 @@ public class Liner4Tree {
 		int hi_level = 0;
 
 		for(int i = 0; i < level; i++){
-			int check = (xor >> (i*2)) & 0x3;//i番目の区切りが11かどうか
+			int check = (xor >>> (i*2)) & 0x3;//i番目の区切りが11かどうか
 			if(check != 0){
 				hi_level = i + 1;
 			}
 		}
 		int area_level = level - hi_level;
 
-		int area_num = bottomright >> (hi_level * 2);
+		int area_num = bottomright >>> (hi_level * 2);
 		//線形四分木の番号 = 等比級数の和 + 空間番号
-		int liner_area_num = (int) ((areaNum[area_level] - 1)/3) + area_num;
-		if(area_num > liner4tree.length)return 0xffffffff;
+		int liner_area_num = (int) (areaNum[area_level]) + area_num;
+		if(liner_area_num > areaNum[level+1])return 0xffffffff;
 		return liner_area_num;
 	}
 
@@ -175,18 +183,10 @@ public class Liner4Tree {
 	public static int get2DMortonNumber(int x, int y){
 		return (bitSeparate32(x) | (bitSeparate32(y)<<1));
 	}
-	/**2次元モートン番号*/
-	public static int get2DMortonNumber(Pos p){
-		return get2DMortonNumber(p.getX(), p.getY());
-	}
 
 	/**座標から線形四分木要素番号*/
 	public int getPointToElemNum(int x, int y){
 		return get2DMortonNumber(x/unitW, y/unitH);
-	}
-	/**座標から線形四分木要素番号*/
-	public int getPointToElemNum(Pos p){
-		return getPointToElemNum(p.getX(), p.getY());
 	}
 }
 
