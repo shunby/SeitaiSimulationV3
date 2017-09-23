@@ -10,18 +10,8 @@ public class Pos {
 	 * */
 	@Deprecated private int x, y;
 
-	/**
-	 * このposがある世界
-	 */
-	private World world;
-
-	public Pos(World world,int x, int y){
-		this.world = world;
-		set(x, y);
-	}
-
 	public Pos(int x, int y){
-		this(Main.get().getMainThread().getWorld(), x, y);
+		set(x,y);
 	}
 	/**
 	 * @param pos
@@ -58,6 +48,21 @@ public class Pos {
     	return getX() + "," + getY();
     }
 
+    /**
+     * 世界の大きさからはみ出していれば調整
+     */
+    public void adjust(World world){
+		int padding = 20;
+
+		int borderX = world.getWidth() - padding;
+		int borderY = world.getHeight() - padding;
+
+		if(x < padding)setX(padding);
+		else if(x > borderX)setX(borderX);
+		if(y < padding)setY(padding);
+		else if(y > borderY)setY(borderY);
+    }
+
 	//get/set---------------------------------
 
 	/**座標をまとめて設定*/
@@ -84,14 +89,10 @@ public class Pos {
 	}
 	/**x座標を設定*/
 	public void setX(int x){
-		if(x > world.getWidth())x = world.getWidth();
-		if(x < 20)x = 20;
 		this.x = x;
 	}
 	/**y座標を設定*/
 	public void setY(int y){
-		if(y > world.getHeight())y = world.getHeight();
-		if(y < 20)y = 20;
 		this.y = y;
 	}
 	/**x座標に加算*/

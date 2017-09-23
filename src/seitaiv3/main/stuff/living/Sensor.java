@@ -6,6 +6,7 @@ package seitaiv3.main.stuff.living;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import seitaiv3.main.stuff.DeathCause;
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.world.World;
 
@@ -39,6 +40,12 @@ public class Sensor extends Stuff {
 	public void setCollided(Stuff collider) {
 		if(collider != living)super.setCollided(collider);
 		if(collider != living && !(collider instanceof Sensor))living.sensored(collider);
+	}
+
+	@Override
+	protected void onDie(DeathCause cause) {
+		// TODO 自動生成されたメソッド・スタブ
+
 	}
 
 

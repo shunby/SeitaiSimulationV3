@@ -28,7 +28,7 @@ public class World {
 		collisionList = new ArrayList<>();
 		rand = new Random();
 		stuffs = new ArrayList<>();
-		camera = new Pos(this,0, 0);
+		camera = new Pos(0, 0);
 	}
 
 	/**

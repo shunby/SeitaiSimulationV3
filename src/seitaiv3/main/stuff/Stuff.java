@@ -26,7 +26,10 @@ public abstract class Stuff {
 	protected List<Stuff> collidedList;
 	/**空間登録用のOFTオブジェクト*/
 	private OFT oft;
-
+	/**死亡フラグ*/
+	private boolean isdead;
+	/**消滅までの時間*/
+	private int removeTime = -1;
 
 	/**
 	 *
@@ -51,6 +54,7 @@ public abstract class Stuff {
 	public void preUpdate(){
 		//速度による位置の変更
 		updateVector();
+		pos.adjust(world);
 	}
 
 	/**二巡目の更新処理
@@ -66,6 +70,13 @@ public abstract class Stuff {
 	public void postUpdate(){
 		//衝突関係の更新
 		updateCollision();
+		if(isdead){
+			removeTime--;
+			if(removeTime <= 0){
+				remove();
+			}
+		}
+
 	}
 
 
@@ -88,6 +99,22 @@ public abstract class Stuff {
 	public void setCollided(Stuff collider) {
 		if(!(collider instanceof Sensor))collidedList.add(collider);
 	}
+
+	/**存在を抹消する
+	 * 世界のオブジェクト一覧・衝突判定空間から自分を消す
+	 * */
+	public void die(DeathCause cause){
+		onDie(cause);
+		isdead = true;
+	}
+
+	public void remove(){
+		collidedList.clear();
+		oft.remove();
+		world = null;
+	}
+
+	protected abstract void onDie(DeathCause cause);
 
 
 

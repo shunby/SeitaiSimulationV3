@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import seitaiv3.main.stuff.DeathCause;
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
@@ -44,6 +45,13 @@ public class Living extends Stuff {
 	 */
 	public void sensored(Stuff collider) {
 		sensoredList.add(collider);
+	}
+
+
+	@Override
+	protected void onDie(DeathCause cause) {
+		// TODO 自動生成されたメソッド・スタブ
+
 	}
 
 
