@@ -147,9 +147,9 @@ public class Liner4Tree {
 	/**矩形のモートン番号(線形)*/
 	public int getLinerMortonNumber(Stuff s){
 		//左上のモートン番号
-		int topleft = getPointToElemNum(s.getPos().getX() - s.getWidth() / 2, s.getPos().getY() - s.getHeight() / 2);
+		int topleft = getPointToElemNum((int)s.getPos().getX() - s.getWidth() / 2, (int)s.getPos().getY() - s.getHeight() / 2);
 		//右下のモートン番号
-		int bottomright = getPointToElemNum(s.getPos().getX() + s.getWidth() / 2, s.getPos().getY() + s.getHeight() / 2);
+		int bottomright = getPointToElemNum((int)s.getPos().getX() + s.getWidth() / 2, (int)s.getPos().getY() + s.getHeight() / 2);
 
 		//右上・左下の排他的論理和
 		int xor = topleft ^ bottomright;

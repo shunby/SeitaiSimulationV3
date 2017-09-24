@@ -8,9 +8,9 @@ public class Pos {
 	 * 座標
 	 * @deprecated 直接いじらない
 	 * */
-	@Deprecated private int x, y;
+	@Deprecated private float x, y;
 
-	public Pos(int x, int y){
+	public Pos(float x, float y){
 		set(x,y);
 	}
 	/**
@@ -22,24 +22,15 @@ public class Pos {
 
 	/**
      * 距離を取得
-     * http://d.hatena.ne.jp/maachang/20140707/1404713912
      */
-    public static int getDistance(Pos p1,Pos p2) {
+    public static float getDistance(Pos p1,Pos p2) {
         // 精度はあまり高めでないが、高速で近似値を計算できる.
-    	int ax = p1.getX();
-    	int ay = p1.getY();
-    	int bx = p2.getX();
-    	int by = p2.getY();
+    	float ax = p1.getX();
+    	float ay = p1.getY();
+    	float bx = p2.getX();
+    	float by = p2.getY();
 
-        int dx,dy ;
-        if ( ( dx = ( ax > bx ) ? ax - bx : bx - ax ) < ( dy = ( ay > by ) ? ay - by : by - ay ) ) {
-            return ((( dy << 8 ) + ( dy << 3 ) - ( dy << 4 ) - ( dy << 1 ) +
-                    ( dx << 7 ) - ( dx << 5 ) + ( dx << 3 ) - ( dx << 1 )) >> 8 );
-        }
-        else {
-            return ((( dx << 8 ) + ( dx << 3 ) - ( dx << 4 ) - ( dx << 1 ) +
-                    ( dy << 7 ) - ( dy << 5 ) + ( dy << 3 ) - ( dy << 1 )) >> 8 );
-        }
+        return (float) Math.sqrt(Math.pow(ax-bx, 2) + Math.pow(ay-by, 2));
     }
 
 
@@ -52,10 +43,10 @@ public class Pos {
      * 世界の大きさからはみ出していれば調整
      */
     public void adjust(World world){
-		int padding = 20;
+		float padding = 20;
 
-		int borderX = world.getWidth() - padding;
-		int borderY = world.getHeight() - padding;
+		float borderX = world.getWidth() - padding;
+		float borderY = world.getHeight() - padding;
 
 		if(x < padding)setX(padding);
 		else if(x > borderX)setX(borderX);
@@ -66,7 +57,7 @@ public class Pos {
 	//get/set---------------------------------
 
 	/**座標をまとめて設定*/
-	public void set(int x, int y){
+	public void set(float x, float y){
 		setX(x);
 		setY(y);
 	}
@@ -75,7 +66,7 @@ public class Pos {
 		setY(p.getY());
 	}
 	/**座標をまとめて加算*/
-	public void add(int x, int y){
+	public void add(float x, float y){
 		addX(x);
 		addY(y);
 	}
@@ -84,31 +75,31 @@ public class Pos {
 		addY(p.y);
 	}
 	public void add(Vector v){
-		addX((int) v.x);
-		addY((int) v.y);
+		addX((float) v.x);
+		addY((float) v.y);
 	}
 	/**x座標を設定*/
-	public void setX(int x){
+	public void setX(float x){
 		this.x = x;
 	}
 	/**y座標を設定*/
-	public void setY(int y){
+	public void setY(float y){
 		this.y = y;
 	}
 	/**x座標に加算*/
-	public void addX(int addX){
+	public void addX(float addX){
 		setX(x + addX);
 	}
 	/**y座標に加算*/
-	public void addY(int addY){
+	public void addY(float addY){
 		setY(y + addY);
 	}
 	/**x座標を取得*/
-	public int getX(){
+	public float getX(){
 		return x;
 	}
 	/**y座標を取得*/
-	public int getY(){
+	public float getY(){
 		return y;
 	}
 }

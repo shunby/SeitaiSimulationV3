@@ -12,6 +12,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
 import seitaiv3.main.stuff.living.Living;
+import seitaiv3.main.stuff.living.Status;
+import seitaiv3.main.stuff.living.plant.Plant;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
 
@@ -33,10 +35,17 @@ public class MainThread extends Task<Boolean> {
 
 	@Override
 	protected Boolean call(){
+		try{
 
 		Random r = new Random();
 		for(int i = 0; i < 1000; i++){
-			Living l1 = new Living(new Pos(r.nextInt(2500) + 100, r.nextInt(2500) + 100), 10, 10, world);
+			Status s = new Status();
+			s.setValue(Status.HP, 1200);
+			s.setValue(Status.HP_MAX, 1200);
+			s.setValue(Status.FOOD, 1200);
+			s.setValue(Status.FOOD_MAX, 1200);
+			s.setValue(Status.SIZE, 30);
+			Living l1 = new Plant(new Pos(r.nextInt(2500) + 100, r.nextInt(2500) + 100), world, s);
 			world.registerStuff(l1);
 		}
 
@@ -47,12 +56,12 @@ public class MainThread extends Task<Boolean> {
 		Color bgColor = new Color(160, 82, 45);
 		GraphicsContext g2 = main.getWindowController().getCanvas().getGraphicsContext2D();
 		while (main.isRunning) {
-				update(wimg, img, g, g2, bgColor);
-			try {
-				Thread.sleep(16);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			update(wimg, img, g, g2, bgColor);
+			Thread.sleep(16);
+		}
+		}catch(Exception e){
+			e.printStackTrace();
+			System.exit(1);
 		}
 		return true;
 	}
@@ -77,7 +86,8 @@ public class MainThread extends Task<Boolean> {
 				main.getWindowController().updateUI(this);
 			});
 		}catch(Exception e){
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			System.exit(1);
 		}
 	}
 

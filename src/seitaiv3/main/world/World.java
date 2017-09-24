@@ -34,7 +34,7 @@ public class World {
 	/**
 	 *
 	 */
-	public void update(Graphics2D g) {
+	public void update(Graphics2D g)throws Exception {
 		stuffs.forEach((stuff)->stuff.preUpdate());
 		collisionCheck();
 		stuffs.forEach((stuff)->stuff.update());
@@ -43,6 +43,12 @@ public class World {
 			if(isInCamera(stuff.getPos()))stuff.draw(g);
 		});
 		stuffs.forEach((stuff)->stuff.postUpdate());
+		for(int i = 0; i < stuffs.size(); i++){
+			if(stuffs.get(i).isRemovable()){
+				stuffs.remove(i);
+				i--;//インデックスのズレを修正
+			}
+		}
 
 	}
 
@@ -100,10 +106,10 @@ public class World {
 	}
 
 	public boolean isInCamera(Pos p){
-		int x = p.getX();
-		int y = p.getY();
-		int cx = camera.getX();
-		int cy = camera.getY();
+		float x = p.getX();
+		float y = p.getY();
+		float cx = camera.getX();
+		float cy = camera.getY();
 		return cx <= x && x <= cx + 700 && cy <= y && y <= cy + 700;
 	}
 

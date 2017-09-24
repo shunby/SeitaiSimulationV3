@@ -18,26 +18,24 @@ public abstract class Stuff {
 	/**加速度*/
 	protected Vector accel;
 
-	protected int width;
-	protected int height;
 	/**このオブジェクトのいる世界*/
 	protected World world;
 	/**衝突リスト*/
 	protected List<Stuff> collidedList;
 	/**空間登録用のOFTオブジェクト*/
-	private OFT oft;
+	protected OFT oft;
 	/**死亡フラグ*/
-	private boolean isdead;
-	/**消滅までの時間*/
-	private int removeTime = -1;
+	protected boolean isdead;
+	/**消滅フラグ*/
+	protected boolean isremoved;
+	/**消滅可能フラグ*/
+	protected boolean isremovable;
 
 	/**
 	 *
 	 */
-	public Stuff(Pos p, int width, int height, World world) {
+	public Stuff(Pos p, World world) {
 		this.pos = new Pos(p);
-		this.width = width;
-		this.height = height;
 		this.world = world;
 		this.speed = new Vector();
 		this.accel = new Vector();
@@ -70,11 +68,8 @@ public abstract class Stuff {
 	public void postUpdate(){
 		//衝突関係の更新
 		updateCollision();
-		if(isdead){
-			removeTime--;
-			if(removeTime <= 0){
-				remove();
-			}
+		if(isremovable){
+			remove();
 		}
 
 	}
@@ -83,6 +78,11 @@ public abstract class Stuff {
 	/**速度・加速度の変更*/
 	protected void updateVector(){
 		speed.add(accel);
+		move(speed);
+	}
+
+	/**移動する*/
+	protected void move(Vector v){
 		pos.add(speed);
 	}
 	/**衝突関係の更新*/
@@ -100,21 +100,38 @@ public abstract class Stuff {
 		if(!(collider instanceof Sensor))collidedList.add(collider);
 	}
 
-	/**存在を抹消する
-	 * 世界のオブジェクト一覧・衝突判定空間から自分を消す
+	/**死ぬ
+	 * まだ本体は残っている
 	 * */
-	public void die(DeathCause cause){
-		onDie(cause);
+	public void die(){
+		isremovable = onDie();
 		isdead = true;
 	}
 
+	/**
+	 * 消える
+	 * 世界のオブジェクト一覧・衝突判定空間から自分を消す
+	 */
 	public void remove(){
 		collidedList.clear();
 		oft.remove();
 		world = null;
+		isremoved=true;
+		onRemoved();
 	}
 
-	protected abstract void onDie(DeathCause cause);
+	/**
+	 * 消滅する
+	 */
+	protected void onRemoved() {
+
+	}
+
+	/**
+	 * 死亡時の処理
+	 * @return 即時消滅するか
+	 */
+	protected abstract boolean onDie();
 
 
 
@@ -132,18 +149,18 @@ public abstract class Stuff {
 	public void setPos(Pos p) {
 		this.pos = p;
 	}
-	public int getWidth() {
-		return width;
+	public boolean isRemoved(){
+		return isremoved;
 	}
-	public void setWidth(int width) {
-		this.width = width;
+	public boolean isRemovable(){
+		return isremovable;
 	}
-	public int getHeight() {
-		return height;
+	public boolean isDead(){
+		return isdead;
 	}
-	public void setHeight(int height) {
-		this.height = height;
-	}
+
+	public abstract int getWidth();
+	public abstract int getHeight();
 	public World getWorld() {
 		return world;
 	}
