@@ -2,9 +2,14 @@ package seitaiv3.main.world;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+
 import seitaiv3.main.stuff.Stuff;
+import seitaiv3.main.stuff.living.Sensor;
 import seitaiv3.main.world.chunk.Liner4Tree;
 
 public class World {
@@ -15,7 +20,7 @@ public class World {
 	/**衝突リスト*/
 	private List<Stuff> collisionList;
 	/**オブジェクト*/
-	private List<Stuff> stuffs;
+	private Set<Stuff> stuffs;
 	/**random*/
 	public Random rand;
 	/**カメラ*/
@@ -24,10 +29,10 @@ public class World {
 	public World(int width, int height){
 		this.width = width;
 		this.height = height;
-		tree = new Liner4Tree(3, this);
+		tree = new Liner4Tree(4, this);
 		collisionList = new ArrayList<>();
 		rand = new Random();
-		stuffs = new ArrayList<>();
+		stuffs = new HashSet<>();
 		camera = new Pos(0, 0);
 	}
 
@@ -43,13 +48,10 @@ public class World {
 			if(isInCamera(stuff.getPos()))stuff.draw(g);
 		});
 		stuffs.forEach((stuff)->stuff.postUpdate());
-		for(int i = 0; i < stuffs.size(); i++){
-			if(stuffs.get(i).isRemovable()){
-				stuffs.remove(i);
-				i--;//インデックスのズレを修正
-			}
-		}
 
+		for(Iterator<Stuff> iter = stuffs.iterator(); iter.hasNext();){
+			if(iter.next().isRemovable())iter.remove();
+		}
 	}
 
 
@@ -69,6 +71,9 @@ public class World {
 			while(i < collisionList.size()){
 				c1 = collisionList.get(i++);
 				c2 = collisionList.get(i++);
+
+				if(c1 instanceof Sensor && c2 instanceof Sensor)continue;
+
 				if(c1 == null)continue;
 				Pos p1 = c1.getPos();
 				Pos p2 = c2.getPos();
@@ -125,7 +130,7 @@ public class World {
 		return tree;
 	}
 
-	public List<Stuff> getStuffs(){
+	public Set<Stuff> getStuffs(){
 		return stuffs;
 	}
 

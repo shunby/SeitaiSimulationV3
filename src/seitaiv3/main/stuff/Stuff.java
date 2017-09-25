@@ -2,8 +2,10 @@ package seitaiv3.main.stuff;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import seitaiv3.main.stuff.living.Sensor;
 import seitaiv3.main.world.Pos;
@@ -21,7 +23,7 @@ public abstract class Stuff {
 	/**このオブジェクトのいる世界*/
 	protected World world;
 	/**衝突リスト*/
-	protected List<Stuff> collidedList;
+	protected Set<Stuff> collidedList;
 	/**空間登録用のOFTオブジェクト*/
 	protected OFT oft;
 	/**死亡フラグ*/
@@ -39,7 +41,7 @@ public abstract class Stuff {
 		this.world = world;
 		this.speed = new Vector();
 		this.accel = new Vector();
-		collidedList = new ArrayList<>();
+		collidedList = new HashSet<>();
 		oft = new OFT(this);
 
 	}

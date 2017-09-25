@@ -25,6 +25,7 @@ public class Plant extends Living {
 	 */
 	public Plant(Pos p, World world, Status status) {
 		super(p, world, status);
+		img = Resources.getChangedImage(Resources.plant, 0, 255, 0);
 	}
 
 	@Override
@@ -32,17 +33,4 @@ public class Plant extends Living {
 		super.update();
 
 	}
-
-	@Override
-	public void draw(Graphics2D g) {
-		int siz = (int)status.getValue(Status.SIZE);
-		g.drawImage(Resources.plant, (int)pos.getX() - siz/2, (int)pos.getY() - siz/2, siz, siz, null);
-	}
-
-	@Override
-	protected boolean onDie() {
-		// TODO 自動生成されたメソッド・スタブ
-		return false;
-	}
-
 }

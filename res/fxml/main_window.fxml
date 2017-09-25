@@ -8,14 +8,14 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <FlowPane prefHeight="700.0" prefWidth="640.0" BorderPane.alignment="CENTER">
+      <FlowPane prefHeight="700.0" prefWidth="663.0" BorderPane.alignment="CENTER">
          <children>
-            <Canvas fx:id="canvas" height="700.0" width="659.0" />
+            <Canvas fx:id="canvas" height="699.0" width="654.0" />
          </children>
       </FlowPane>
    </center>
    <right>
-      <VBox fx:id="info" prefHeight="700.0" prefWidth="226.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="info" prefHeight="700.0" prefWidth="237.0" BorderPane.alignment="CENTER">
          <children>
             <Label fx:id="simulateState" prefHeight="45.0" prefWidth="226.0" text="time: --" />
          </children></VBox>

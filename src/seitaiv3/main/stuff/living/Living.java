@@ -1,8 +1,13 @@
 package seitaiv3.main.stuff.living;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import seitaiv3.main.Resources;
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.stuff.Vector;
 import seitaiv3.main.world.Pos;
@@ -11,29 +16,29 @@ import seitaiv3.main.world.World;
 public abstract class Living extends Stuff {
 	/**死亡とみなすHPの割合*/
 	public static float DEATH_RATE = 0.3f;
-	/**触覚*/
-	protected Sensor sensor;
-	/**触覚に触れたもの(フレームごとに更新)*/
-	protected List<Stuff> sensoredList;
+
 	/**ステータス*/
 	protected Status status;
 	/**進みたい向き*/
 	protected Vector moving;
+	/**画像*/
+	protected BufferedImage img;
+
+	private int width, height;
 
 	public Living(Pos p, World world, Status status) {
 		super(p, world);
-
-		sensor = new Sensor(this, 100, world);
-		sensoredList = new ArrayList<>();
 		this.status = status;
 		moving = new Vector();
-		world.registerStuff(sensor);
+
+		height = (int)status.getSize();
+		width = (int)status.getSize();
 	}
 
 	@Override
 	protected void updateVector() {
 		super.updateVector();
-		pos.add(moving.getNormalize().mul(status.getValue(Status.SPEED)));
+		pos.add(moving.getNormalize().mul(status.getSpeed()));
 
 	}
 
@@ -42,31 +47,20 @@ public abstract class Living extends Stuff {
 	public void update() {
 		super.update();
 
-		if(status.getValue(Status.FOOD) > 0){
-			status.setValue(Status.FOOD, status.getValue(Status.FOOD) - 1);
+		if(status.getFood() > 0){
+			status.setFood(status.getFood() - 1);
 		}else{
-			status.setValue(Status.HP, status.getValue(Status.HP) - 1);
+			status.setHp(status.getHp() - 1);
 		}
 
-		if(!isdead && status.getValue(Status.HP) <= status.getValue(Status.HP_MAX) * DEATH_RATE){//死亡判定
+		if(!isdead && status.getHp() <= status.getHp_max() * DEATH_RATE){//死亡判定
 			die();
-		}else if(status.getValue(Status.HP) <= 0){//消滅判定
+		}else if(status.getHp() <= 0){//消滅判定
 			isremovable = true;
 		}
 	}
 
-	@Override
-	public void postUpdate() {
-		super.postUpdate();
-		sensoredList.clear();
-	}
 
-	/**
-	 * センサーに触れた
-	 */
-	public void sensored(Stuff collider) {
-		sensoredList.add(collider);
-	}
 
 	@Override
 	protected boolean onDie() {
@@ -74,9 +68,11 @@ public abstract class Living extends Stuff {
 	}
 
 
+
 	@Override
-	protected void onRemoved() {
-		sensor.die();
+	public void draw(Graphics2D g) {
+		int siz = (int)status.getSize();
+		g.drawImage(img, (int)pos.getX() - siz/2, (int)pos.getY() - siz/2, siz, siz, null);
 	}
 
 	//get/set-----------------------------------
@@ -91,12 +87,12 @@ public abstract class Living extends Stuff {
 
 	@Override
 	public int getWidth() {
-		return (int)status.getValue(Status.SIZE);
+		return width;
 	}
 
 	@Override
 	public int getHeight() {
-		return (int)status.getValue(Status.SIZE);
+		return height;
 	}
 
 

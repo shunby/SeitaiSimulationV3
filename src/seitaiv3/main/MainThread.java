@@ -13,6 +13,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
 import seitaiv3.main.stuff.living.Living;
 import seitaiv3.main.stuff.living.Status;
+import seitaiv3.main.stuff.living.animal.Animal;
 import seitaiv3.main.stuff.living.plant.Plant;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
@@ -20,7 +21,7 @@ import seitaiv3.main.world.World;
 /**
  *メインの処理を実行するスレッド
  */
-public class MainThread extends Task<Boolean> {
+public class MainThread implements Runnable {
 	/**Main*/
 	private Main main;
 	/**世界*/
@@ -34,19 +35,30 @@ public class MainThread extends Task<Boolean> {
 	}
 
 	@Override
-	protected Boolean call(){
+	public void run(){
 		try{
 
 		Random r = new Random();
-		for(int i = 0; i < 1000; i++){
+		for(int i = 0; i < 2000; i++){
 			Status s = new Status();
-			s.setValue(Status.HP, 1200);
-			s.setValue(Status.HP_MAX, 1200);
-			s.setValue(Status.FOOD, 1200);
-			s.setValue(Status.FOOD_MAX, 1200);
-			s.setValue(Status.SIZE, 30);
+			s.setHp(120);
+			s.setHp_max(1200);
+			s.setFood(120);
+			s.setFood_max(1200);
+			s.setSize(30);
 			Living l1 = new Plant(new Pos(r.nextInt(2500) + 100, r.nextInt(2500) + 100), world, s);
 			world.registerStuff(l1);
+
+			Status s1 = new Status();
+			s1.setHp(120);
+			s1.setHp_max(1200);
+			s1.setFood(120);
+			s1.setFood_max(1200);
+			s1.setSize(30);
+			s1.setSpeed(5);
+			s1.setFeed(r.nextFloat());
+			Living l2 = new Animal(new Pos(r.nextInt(2500) + 100, r.nextInt(2500) + 100), world, s1);
+			world.registerStuff(l2);
 		}
 
 		//Graphics2D g = main.getWindowController().getCanvas().getGraphicsContext2D();
@@ -57,13 +69,11 @@ public class MainThread extends Task<Boolean> {
 		GraphicsContext g2 = main.getWindowController().getCanvas().getGraphicsContext2D();
 		while (main.isRunning) {
 			update(wimg, img, g, g2, bgColor);
-			Thread.sleep(16);
 		}
 		}catch(Exception e){
 			e.printStackTrace();
 			System.exit(1);
 		}
-		return true;
 	}
 
 
@@ -84,6 +94,7 @@ public class MainThread extends Task<Boolean> {
 			Platform.runLater(()->{
 				g2.drawImage(wimg, 0, 0);
 				main.getWindowController().updateUI(this);
+
 			});
 		}catch(Exception e){
 			e.printStackTrace();
