@@ -11,7 +11,7 @@ import seitaiv3.main.Resources;
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.stuff.living.Living;
 import seitaiv3.main.stuff.living.Sensor;
-import seitaiv3.main.stuff.living.Status;
+import seitaiv3.main.stuff.living.status.Status;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
 
@@ -41,13 +41,18 @@ public class Animal extends Living {
 
 		moving.set(world.rand.nextInt(5)-2, world.rand.nextInt(5)-2);
 		//肉食度によって画像を変える
-		float feed = status.getFeed();
-		if(feed < 0.4){//草食
+		switch(getType()){
+		case PlantEater:
 			img = Resources.planteater;
-		}else if(0.6 < feed){//肉食
+			break;
+		case FleshEater:
 			img = Resources.flesheater;
-		}else{//雑食
-			img = Resources.alleater;
+			break;
+		case AnyEater:
+			img = Resources.anyeater;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -58,12 +63,38 @@ public class Animal extends Living {
 		if(world.rand.nextInt(50) == 2){
 			moving.set(world.rand.nextInt(5)-2, world.rand.nextInt(5)-2);
 		}
+		catchFeed();
+
 	}
 
 	@Override
 	public void postUpdate() {
 		super.postUpdate();
 		sensoredList.clear();
+	}
+
+	/**餌をとる*/
+	protected void catchFeed(){
+		LivingType type = getType();
+		collidedList.forEach((col)->{
+			if(col instanceof Living && ((Living)col).isFeed(this)){
+				eat((Living)col);
+			}
+		});
+	}
+
+	/**食べる*/
+	protected void eat(Living liv){
+		int gain = 2;
+		Status stat = liv.getStatus();
+		if(stat.getFood() > 0){
+			stat.setFeed(stat.getFood() - gain);
+			status.setFood(status.getFood() + gain);
+		}else{
+			stat.setHp(stat.getHp() - gain);
+			status.setHp(status.getHp() + gain);
+		}
+
 	}
 
 	/**
@@ -77,6 +108,21 @@ public class Animal extends Living {
 	@Override
 	protected void onRemoved() {
 		sensor.die();
+	}
+
+
+	@Override
+	public LivingType getType() {
+		float feed = status.getFeed();
+
+		if(feed < 0.4){
+			return LivingType.PlantEater;
+		}else if(feed > 0.6){
+			return LivingType.FleshEater;
+		}else{
+			return LivingType.AnyEater;
+		}
+
 	}
 
 }

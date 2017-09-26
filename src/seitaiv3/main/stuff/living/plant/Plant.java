@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 
 import seitaiv3.main.Resources;
 import seitaiv3.main.stuff.living.Living;
-import seitaiv3.main.stuff.living.Status;
+import seitaiv3.main.stuff.living.status.Status;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
 
@@ -32,5 +32,11 @@ public class Plant extends Living {
 	public void update() {
 		super.update();
 
+	}
+
+
+	@Override
+	public LivingType getType() {
+		return LivingType.Plant;
 	}
 }

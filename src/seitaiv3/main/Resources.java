@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
  *
  */
 public class Resources {
-	public static BufferedImage plant, planteater, flesheater, alleater;
+	public static BufferedImage plant, planteater, flesheater, anyeater;
 
 	static{
 		ClassLoader cl = Resources.class.getClassLoader();
@@ -23,7 +23,7 @@ public class Resources {
 			plant = ImageIO.read(cl.getResource("res/image/plant.png"));
 			planteater = ImageIO.read(cl.getResource("res/image/rabbit.png"));
 			flesheater = ImageIO.read(cl.getResource("res/image/wolf.png"));
-			alleater = ImageIO.read(cl.getResource("res/image/raccoon.png"));
+			anyeater = ImageIO.read(cl.getResource("res/image/raccoon.png"));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

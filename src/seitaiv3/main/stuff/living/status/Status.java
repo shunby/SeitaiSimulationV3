@@ -1,4 +1,4 @@
-package seitaiv3.main.stuff.living;
+package seitaiv3.main.stuff.living.status;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +11,7 @@ public class Status {
 	/**ステータス*/
 	private float hp, hp_max, food, food_max, size, speed,
 		pgrowth_speed, feed;
+
 
 	public Status(){
 

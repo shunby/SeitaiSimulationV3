@@ -10,6 +10,8 @@ import java.util.Set;
 import seitaiv3.main.Resources;
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.stuff.Vector;
+import seitaiv3.main.stuff.living.animal.Animal;
+import seitaiv3.main.stuff.living.status.Status;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
 
@@ -95,7 +97,28 @@ public abstract class Living extends Stuff {
 		return height;
 	}
 
+	public abstract LivingType getType();
 
 
+	public static enum LivingType{
+		Plant, PlantEater, FleshEater, AnyEater
+	}
+
+
+	public boolean isFeed(Living animal) {
+		LivingType t = getType();
+		switch(animal.getType()){
+		case PlantEater:
+			if(t == LivingType.Plant)return true;
+			break;
+		case FleshEater:
+			if(t == LivingType.PlantEater)return true;
+			break;
+		case AnyEater:
+			if(t != LivingType.Plant)return true;
+			break;
+		}
+		return false;
+	}
 
 }
