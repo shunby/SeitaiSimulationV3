@@ -93,16 +93,7 @@ public class MainThread implements Runnable {
 			g.setColor(bgColor);
 			g.fillRect(0, 0, 700, 700);
 
-			if(world.rand.nextInt(10) == 1){
-				Status s = new Status();
-				s.setHp(120);
-				s.setHp_max(1200);
-				s.setFood(120);
-				s.setFood_max(1200);
-				s.setSize(30);
-				Living l1 = new Plant(new Pos(world.rand.nextInt(2500) + 100, world.rand.nextInt(2500) + 100), world, s);
-				world.registerStuff(l1);
-			}
+
 
 			world.update(g);
 			SwingFXUtils.toFXImage(img, wimg);

@@ -21,6 +21,10 @@ public class World {
 	private List<Stuff> collisionList;
 	/**オブジェクト*/
 	private Set<Stuff> stuffs;
+	/**バッファ*/
+	private Set<Stuff> stuffsBuffer;
+	/**更新処理中か*/
+	private boolean isUpdating;
 	/**random*/
 	public Random rand;
 	/**カメラ*/
@@ -33,6 +37,7 @@ public class World {
 		collisionList = new ArrayList<>();
 		rand = new Random();
 		stuffs = new HashSet<>();
+		stuffsBuffer = new HashSet<>();
 		camera = new Pos(0, 0);
 	}
 
@@ -40,9 +45,19 @@ public class World {
 	 *
 	 */
 	public void update(Graphics2D g)throws Exception {
+		//バッファの中身を全てリストに追加
+		stuffsBuffer.forEach((stuff)->registerStuff(stuff));
+		stuffsBuffer.clear();
+
+		isUpdating = true;
+
 		stuffs.forEach((stuff)->stuff.preUpdate());
 		collisionCheck();
-		stuffs.forEach((stuff)->stuff.update());
+
+		for(Iterator<Stuff> iter = stuffs.iterator(); iter.hasNext();){
+			iter.next().update();
+		}
+
 		stuffs.forEach((stuff)->{
 			//描画
 			if(isInCamera(stuff.getPos()))stuff.draw(g);
@@ -52,6 +67,8 @@ public class World {
 		for(Iterator<Stuff> iter = stuffs.iterator(); iter.hasNext();){
 			if(iter.next().isRemovable())iter.remove();
 		}
+
+		isUpdating = false;
 	}
 
 
@@ -100,6 +117,11 @@ public class World {
 	}
 
 	public void registerStuff(Stuff s){
+		if(isUpdating){
+			stuffsBuffer.add(s);
+			return;
+		}
+
 		tree.register(s.getOFT());
 		stuffs.add(s);
 	}
