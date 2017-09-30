@@ -10,15 +10,12 @@ import java.util.Set;
 
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.stuff.living.Sensor;
+import seitaiv3.main.world.chunk.Chunk;
 import seitaiv3.main.world.chunk.Liner4Tree;
 
 public class World {
 	/**幅と奥行き*/
 	private int width, height;
-	/**四分探索木*/
-	private Liner4Tree tree;
-	/**衝突リスト*/
-	private List<Stuff> collisionList;
 	/**オブジェクト*/
 	private Set<Stuff> stuffs;
 	/**バッファ*/
@@ -29,13 +26,16 @@ public class World {
 	public Random rand;
 	/**カメラ*/
 	private Pos camera;
+	/**チャンク*/
+	private Chunk[][] chunks;
+	/**チャンクの一辺の大きさ*/
+	private final int chunkLength = 50;
 
 	public World(int width, int height){
 		this.width = width;
 		this.height = height;
-		tree = new Liner4Tree(4, this);
-		collisionList = new ArrayList<>();
 		rand = new Random();
+		chunks = new Chunk[width/chunkLength][height/chunkLength];
 		stuffs = new HashSet<>();
 		stuffsBuffer = new HashSet<>();
 		camera = new Pos(0, 0);
@@ -76,10 +76,12 @@ public class World {
 
 	/**衝突判定*/
 	private void collisionCheck(){
-		tree.collisionCheck(collisionList);
 
-
-
+		for(Chunk[] c:chunks){
+			for(Chunk chunk:c){
+				chunk.collisionCheck();
+			}
+		}
 
 		Stuff c1 = null;
 		Stuff c2 = null;
@@ -91,24 +93,6 @@ public class World {
 
 				if(c1 instanceof Sensor && c2 instanceof Sensor)continue;
 
-				if(c1 == null)continue;
-				Pos p1 = c1.getPos();
-				Pos p2 = c2.getPos();
-				int w1 = c1.getWidth();
-				int h1 = c1.getHeight();
-				int w2 = c2.getWidth();
-				int h2 = c2.getHeight();
-
-				//矩形の衝突判定
-
-				if((Math.abs(p1.getX() - p2.getX()) < (w1+ w2) / 2)
-					&&
-					(Math.abs(p1.getY() - p2.getY()) < (h1 + h2) / 2)
-				){
-
-					c1.setCollided(c2);
-					c2.setCollided(c1);
-				}
 
 
 			}
@@ -122,7 +106,6 @@ public class World {
 			return;
 		}
 
-		tree.register(s.getOFT());
 		stuffs.add(s);
 	}
 
@@ -146,10 +129,6 @@ public class World {
 
 	public int getHeight() {
 		return height;
-	}
-
-	public Liner4Tree getTree() {
-		return tree;
 	}
 
 	public Set<Stuff> getStuffs(){
