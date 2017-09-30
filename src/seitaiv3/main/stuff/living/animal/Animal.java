@@ -10,7 +10,6 @@ import java.util.Set;
 import seitaiv3.main.Resources;
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.stuff.living.Living;
-import seitaiv3.main.stuff.living.Sensor;
 import seitaiv3.main.stuff.living.status.Status;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
@@ -19,12 +18,6 @@ import seitaiv3.main.world.World;
  * 動物
  */
 public class Animal extends Living {
-
-	/**触覚*/
-	protected Sensor sensor;
-	/**触覚に触れたもの(フレームごとに更新)*/
-	protected Set<Stuff> sensoredList;
-
 
 
 	/**
@@ -35,9 +28,6 @@ public class Animal extends Living {
 	public Animal(Pos p, World world, Status status) {
 		super(p, world, status);
 
-		sensor = new Sensor(this, 100, world);
-		sensoredList = new HashSet<>();
-		world.registerStuff(sensor);
 
 		moving.set(world.rand.nextInt(5)-2, world.rand.nextInt(5)-2);
 		//肉食度によって画像を変える
@@ -70,7 +60,6 @@ public class Animal extends Living {
 	@Override
 	public void postUpdate() {
 		super.postUpdate();
-		sensoredList.clear();
 	}
 
 	/**餌をとる*/
@@ -97,17 +86,9 @@ public class Animal extends Living {
 
 	}
 
-	/**
-	 * センサーに触れた
-	 */
-	public void sensored(Stuff collider) {
-		sensoredList.add(collider);
-	}
-
 
 	@Override
 	protected void onRemoved() {
-		sensor.die();
 	}
 
 

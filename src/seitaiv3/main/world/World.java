@@ -1,17 +1,14 @@
 package seitaiv3.main.world;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 import seitaiv3.main.stuff.Stuff;
-import seitaiv3.main.stuff.living.Sensor;
 import seitaiv3.main.world.chunk.Chunk;
-import seitaiv3.main.world.chunk.Liner4Tree;
 
 public class World {
 	/**幅と奥行き*/
@@ -36,6 +33,11 @@ public class World {
 		this.height = height;
 		rand = new Random();
 		chunks = new Chunk[width/chunkLength][height/chunkLength];
+		for(int x = 0; x < width/chunkLength; x++){
+			for(int y = 0; y < height/chunkLength; y++){
+				chunks[x][y] = new Chunk(x, y);
+			}
+		}
 		stuffs = new HashSet<>();
 		stuffsBuffer = new HashSet<>();
 		camera = new Pos(0, 0);
@@ -50,6 +52,15 @@ public class World {
 		stuffsBuffer.clear();
 
 		isUpdating = true;
+
+		//罫線の描画
+		g.setColor(Color.black);
+		for(int x = 0; x < chunks.length; x++){
+			g.drawLine(x * chunkLength, 0, x * chunkLength, height);
+		}
+		for(int y = 0; y < chunks[0].length; y++){
+			g.drawLine(0, y * chunkLength, width, y * chunkLength);
+		}
 
 		stuffs.forEach((stuff)->stuff.preUpdate());
 		collisionCheck();
@@ -68,6 +79,8 @@ public class World {
 			if(iter.next().isRemovable())iter.remove();
 		}
 
+
+
 		isUpdating = false;
 	}
 
@@ -76,25 +89,9 @@ public class World {
 
 	/**衝突判定*/
 	private void collisionCheck(){
-
 		for(Chunk[] c:chunks){
 			for(Chunk chunk:c){
 				chunk.collisionCheck();
-			}
-		}
-
-		Stuff c1 = null;
-		Stuff c2 = null;
-		if(collisionList.size() > 0){
-			int i = 0;
-			while(i < collisionList.size()){
-				c1 = collisionList.get(i++);
-				c2 = collisionList.get(i++);
-
-				if(c1 instanceof Sensor && c2 instanceof Sensor)continue;
-
-
-
 			}
 		}
 
@@ -111,6 +108,11 @@ public class World {
 
 
 	//ここからget/set-------------------------------
+
+	public Chunk getChunk(Pos p){
+		return chunks[(int) (p.getX()/chunkLength)][(int) (p.getY()/chunkLength)];
+	}
+
 	public Pos getCamera(){
 		return camera;
 	}
@@ -133,6 +135,10 @@ public class World {
 
 	public Set<Stuff> getStuffs(){
 		return stuffs;
+	}
+
+	public Chunk[][] getChunks(){
+		return chunks;
 	}
 
 

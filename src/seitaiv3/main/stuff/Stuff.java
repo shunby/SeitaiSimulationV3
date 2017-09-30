@@ -7,10 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import seitaiv3.main.stuff.living.Sensor;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
-import seitaiv3.main.world.chunk.OFT;
+import seitaiv3.main.world.chunk.Chunk;
 
 public abstract class Stuff {
 	/**座標*/
@@ -22,10 +21,10 @@ public abstract class Stuff {
 
 	/**このオブジェクトのいる世界*/
 	protected World world;
+	/**このオブジェクトのいるチャンク*/
+	protected Chunk chunk;
 	/**衝突リスト*/
 	protected Set<Stuff> collidedList;
-	/**空間登録用のOFTオブジェクト*/
-	protected OFT oft;
 	/**死亡フラグ*/
 	protected boolean isdead;
 	/**消滅フラグ*/
@@ -42,8 +41,7 @@ public abstract class Stuff {
 		this.speed = new Vector();
 		this.accel = new Vector();
 		collidedList = new HashSet<>();
-		oft = new OFT(this);
-
+		chunk = world.getChunk(pos);
 	}
 
 	/**最初の更新処理
@@ -55,6 +53,12 @@ public abstract class Stuff {
 		//速度による位置の変更
 		updateVector();
 		pos.adjust(world);
+	}
+
+	/**速度・加速度の変更*/
+	protected void updateVector(){
+		speed.add(accel);
+		pos.add(speed);
 	}
 
 	/**二巡目の更新処理
@@ -77,21 +81,12 @@ public abstract class Stuff {
 	}
 
 
-	/**速度・加速度の変更*/
-	protected void updateVector(){
-		speed.add(accel);
-		move(speed);
-	}
-
-	/**移動する*/
-	protected void move(Vector v){
-		pos.add(speed);
-	}
 	/**衝突関係の更新*/
 	protected void updateCollision(){
 		collidedList.clear();
-		oft.remove();
-		world.getTree().register(oft);
+		chunk.getStuffs().remove(this);
+		chunk = world.getChunk(pos);
+		chunk.getStuffs().add(this);
 	}
 
 	/**描画処理*/
@@ -99,7 +94,7 @@ public abstract class Stuff {
 
 	/**衝突リストに加える*/
 	public void setCollided(Stuff collider) {
-		if(!(collider instanceof Sensor))collidedList.add(collider);
+		collidedList.add(collider);
 	}
 
 	/**死ぬ
@@ -116,7 +111,7 @@ public abstract class Stuff {
 	 */
 	public void remove(){
 		collidedList.clear();
-		oft.remove();
+		chunk.getStuffs().remove(this);
 		world = null;
 		isremoved=true;
 		onRemoved();
@@ -169,8 +164,8 @@ public abstract class Stuff {
 	public void setWorld(World world) {
 		this.world = world;
 	}
-	public OFT getOFT() {
-		return oft;
+	public Chunk getChunk() {
+		return chunk;
 	}
 
 
