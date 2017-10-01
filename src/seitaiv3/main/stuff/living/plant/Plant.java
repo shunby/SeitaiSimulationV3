@@ -28,15 +28,18 @@ public class Plant extends Living {
 
 	@Override
 	public void updateAliving() {
-		if(world.rand.nextInt(1500) == 1){
+		status.setEnergy(status.getEnergy() + chunk.gainEnergy(1) + chunk.getSun());
+		if(world.rand.nextInt(600) == 1){
 			for(int i = 0; i < 2; i++){
 				Status s = new Status();
-				s.setEnergy(700);
-				s.setEnergy_max(1200);
+				s.setEnergy(status.getEnergy()/3);
+				s.setEnergy_max(700);
 				s.setSize(30);
 				Living l1 = new Plant(new Pos(pos.getX() +  world.rand.nextInt(51) - 25, pos.getY() +world.rand.nextInt(51) - 25), world, s);
 				world.registerStuff(l1);
 			}
+			status.setEnergy(status.getEnergy()/3);
+
 		}
 	}
 

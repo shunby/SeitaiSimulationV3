@@ -56,6 +56,18 @@ public class Pos {
 
 	//get/set---------------------------------
 
+	/**
+	 * ベクトルを減算した結果を返します。
+	 *
+	 * @param v
+	 *            減算するベクトル
+	 * @return 減算されたベクトル
+	 */
+	public Vector getSub(Vector v) {
+		return new Vector(x - v.x, y - v.y);
+	}
+
+
 	/**座標をまとめて設定*/
 	public void set(float x, float y){
 		setX(x);

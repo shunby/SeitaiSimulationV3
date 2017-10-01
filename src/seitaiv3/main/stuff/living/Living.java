@@ -1,23 +1,19 @@
 package seitaiv3.main.stuff.living;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import seitaiv3.main.Resources;
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.stuff.Vector;
-import seitaiv3.main.stuff.living.animal.Animal;
 import seitaiv3.main.stuff.living.status.Status;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
 
 public abstract class Living extends Stuff {
 	/**死亡とみなすHPの割合*/
-	public static float DEATH_RATE = 0.3f;
+	public static float DEATH_RATE = 0.1f;
 
 	/**ステータス*/
 	protected Status status;
@@ -53,8 +49,9 @@ public abstract class Living extends Stuff {
 
 		if(!isdead && status.getEnergy() <= status.getEnergy_max() * DEATH_RATE){//死亡判定
 			die();
-		}else if(status.getEnergy() <= 0){//消滅判定
-			isremovable = true;
+		}else{//消滅判定
+			chunk.gainEnergy(-1);
+			if(status.getEnergy() <= 0)isremovable = true;
 		}
 		if(isdead) updateDead();
 			else updateAliving();
@@ -78,7 +75,25 @@ public abstract class Living extends Stuff {
 	public void draw(Graphics2D g) {
 		int siz = (int)status.getSize();
 		Pos p = world.getWindowPos(pos);
-		g.drawImage(img, (int)p.getX() - siz/2, (int)p.getY() - siz/2, siz, siz, null);
+
+		if(isdead){
+			AffineTransform beforeAffin = g.getTransform();
+			AffineTransform affin = new AffineTransform();
+			affin.translate(p.getX() - siz/2, p.getY() - siz/2 );
+			affin.scale( 1.0, 1.0 );
+			affin.rotate( Math.toRadians(180), siz / 2, siz / 2 );
+			g.transform( affin );
+
+			g.drawImage( img, 0, 0, siz, siz, null );
+			g.setColor(new Color(0, 0, 0, 100));
+			g.fillRect(0, 0, siz, siz);
+			g.setTransform( beforeAffin );
+		}else{
+			g.drawImage(img, (int)p.getX() - siz/2, (int)p.getY() - siz/2, siz, siz, null);
+
+		}
+		g.setColor(Color.yellow);
+		g.drawString(String.format("%.1f", status.getEnergy()), (int)p.getX() - siz/2, (int)p.getY() - siz/2);
 	}
 
 	//get/set-----------------------------------

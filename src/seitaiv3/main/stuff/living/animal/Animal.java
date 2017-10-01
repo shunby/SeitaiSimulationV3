@@ -9,6 +9,7 @@ import java.util.Set;
 
 import seitaiv3.main.Resources;
 import seitaiv3.main.stuff.Stuff;
+import seitaiv3.main.stuff.Vector;
 import seitaiv3.main.stuff.living.Living;
 import seitaiv3.main.stuff.living.status.Status;
 import seitaiv3.main.world.Pos;
@@ -19,6 +20,8 @@ import seitaiv3.main.world.World;
  */
 public class Animal extends Living {
 
+	private Living target;
+
 
 	/**
 	 * @param p
@@ -28,8 +31,6 @@ public class Animal extends Living {
 	public Animal(Pos p, World world, Status status) {
 		super(p, world, status);
 
-
-		moving.set(world.rand.nextInt(5)-2, world.rand.nextInt(5)-2);
 		//肉食度によって画像を変える
 		switch(getType()){
 		case PlantEater:
@@ -49,9 +50,10 @@ public class Animal extends Living {
 
 	@Override
 	public void updateAliving() {
-		if(world.rand.nextInt(50) == 2){
-			moving.set(world.rand.nextInt(5)-2, world.rand.nextInt(5)-2);
-		}
+		chaseFeed();
+		if(target != null){
+			moving = target.getPos().getSub(new Vector(pos.getX(), pos.getY()));
+		}else if(world.rand.nextInt(50)==0)moving.set(world.rand.nextInt(5) - 2, world.rand.nextInt(5) - 2);
 		catchFeed();
 
 	}
@@ -61,9 +63,39 @@ public class Animal extends Living {
 		super.postUpdate();
 	}
 
+	/**餌を追う*/
+	protected void chaseFeed(){
+		int eye = 3;
+
+
+		target = null;
+		float nearest = Float.MAX_VALUE;
+		int w = world.getChunks().length;
+		int h = world.getChunks()[0].length;
+		for(int x = chunk.x - eye;x <= chunk.x + eye; x++){
+			for(int y = chunk.y - eye;y <= chunk.y + eye;y++ ){
+				//チャンクごとに判定
+				if(0 <= x  && x < w && 0 <= y && y < h){//チャンクが存在するか
+					for(Stuff stuff: world.getChunks()[x][y].getStuffs()){
+						if(stuff != this && stuff instanceof Living){
+							if(((Living)stuff).isFeed(this)){
+								float distance = Pos.getDistance(pos, stuff.getPos());
+								if(distance < nearest){
+									nearest = distance;
+									target = ((Living)stuff);
+								}
+							}
+						}
+					}
+				}
+
+			}
+		}
+
+	}
+
 	/**餌をとる*/
 	protected void catchFeed(){
-		LivingType type = getType();
 		collidedList.forEach((col)->{
 			if(col instanceof Living && ((Living)col).isFeed(this)){
 				eat((Living)col);

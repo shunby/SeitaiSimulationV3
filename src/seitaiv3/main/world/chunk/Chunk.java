@@ -9,14 +9,29 @@ import seitaiv3.main.world.Pos;
 
 public class Chunk {
 	/**チャンク位置*/
-	private final int x, y;
+	public final int x, y;
+
+	/**日照量*/
+	private float sun;
+	/**内蔵エネルギー量*/
+	private float energy;
+	/**最大内蔵エネルギー*/
+	private float energy_max;
 
 	private Set<Stuff> stuffs;
 
 	public Chunk(int x, int y){
 		this.x = x;
 		this.y = y;
+		this.energy = 1000;
+		this.energy_max = 10000;
+		this.sun = 0.7f;
 		stuffs = new HashSet<>();
+	}
+
+	/**フレームごとの更新処理*/
+	public void update(){
+
 	}
 
 	public void collisionCheck(){
@@ -48,5 +63,25 @@ public class Chunk {
 
 	public Set<Stuff> getStuffs(){
 		return stuffs;
+	}
+
+	public float getSun(){
+		return sun;
+	}
+
+
+	public float getEnergy(){
+		return energy;
+	}
+
+	public float gainEnergy(float gain){
+		if(gain <= energy){
+			energy-=gain;
+			return gain;
+		}else{
+			gain = energy;
+			energy = 0;
+			return gain;
+		}
 	}
 }

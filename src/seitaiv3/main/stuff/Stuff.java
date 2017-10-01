@@ -134,6 +134,7 @@ public abstract class Stuff {
 
 	//ここからgetter/setter----------------------------
 
+
 	public Vector getAccel(){
 		return accel;
 	}
