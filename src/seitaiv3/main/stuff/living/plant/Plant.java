@@ -3,8 +3,6 @@
  */
 package seitaiv3.main.stuff.living.plant;
 
-import java.awt.Graphics2D;
-
 import seitaiv3.main.Resources;
 import seitaiv3.main.stuff.living.Living;
 import seitaiv3.main.stuff.living.status.Status;
@@ -29,17 +27,16 @@ public class Plant extends Living {
 	}
 
 	@Override
-	public void update() {
-		super.update();
-		if(world.rand.nextInt(300) == 1){
-			Status s = new Status();
-			s.setHp(120);
-			s.setHp_max(1200);
-			s.setFood(120);
-			s.setFood_max(1200);
-			s.setSize(30);
-			Living l1 = new Plant(new Pos(pos.getX() +  world.rand.nextInt(51) - 25, pos.getY() +world.rand.nextInt(51) - 25), world, s);
-			world.registerStuff(l1);
+	public void updateAliving() {
+		if(world.rand.nextInt(1500) == 1){
+			for(int i = 0; i < 2; i++){
+				Status s = new Status();
+				s.setEnergy(700);
+				s.setEnergy_max(1200);
+				s.setSize(30);
+				Living l1 = new Plant(new Pos(pos.getX() +  world.rand.nextInt(51) - 25, pos.getY() +world.rand.nextInt(51) - 25), world, s);
+				world.registerStuff(l1);
+			}
 		}
 	}
 
@@ -47,5 +44,11 @@ public class Plant extends Living {
 	@Override
 	public LivingType getType() {
 		return LivingType.Plant;
+	}
+
+
+	@Override
+	public void updateDead() {
+
 	}
 }

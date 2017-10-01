@@ -48,8 +48,7 @@ public class Animal extends Living {
 
 
 	@Override
-	public void update() {
-		super.update();
+	public void updateAliving() {
 		if(world.rand.nextInt(50) == 2){
 			moving.set(world.rand.nextInt(5)-2, world.rand.nextInt(5)-2);
 		}
@@ -76,13 +75,9 @@ public class Animal extends Living {
 	protected void eat(Living liv){
 		int gain = 2;
 		Status stat = liv.getStatus();
-		if(stat.getFood() > 0){
-			stat.setFeed(stat.getFood() - gain);
-			status.setFood(status.getFood() + gain);
-		}else{
-			stat.setHp(stat.getHp() - gain);
-			status.setHp(status.getHp() + gain);
-		}
+
+		stat.setEnergy(stat.getEnergy() - gain);
+		status.setEnergy(status.getEnergy() + gain);
 
 	}
 
@@ -103,6 +98,12 @@ public class Animal extends Living {
 		}else{
 			return LivingType.AnyEater;
 		}
+
+	}
+
+
+	@Override
+	public void updateDead() {
 
 	}
 

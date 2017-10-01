@@ -1,15 +1,12 @@
 package seitaiv3.main.stuff.living.status;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author 春太朗
  *
  */
 public class Status implements Cloneable {
 	/**ステータス*/
-	private float hp, hp_default, hp_max, food, food_max, size, speed,
+	private float energy, energy_max, size, speed,
 		pgrowth_speed, feed;
 
 
@@ -21,11 +18,8 @@ public class Status implements Cloneable {
 	protected Status clone(){
 		Status res = new Status();
 
-		res.hp = hp;
-		res.hp_default = hp_default;
-		res.hp_max = hp_max;
-		res.food = food;
-		res.food_max = food_max;
+		res.energy = energy;
+		res.energy_max = energy_max;
 		res.size = size;
 		res.speed = speed;
 		res.pgrowth_speed = pgrowth_speed;
@@ -37,25 +31,6 @@ public class Status implements Cloneable {
 
 	//get/set-------------------------------------------
 
-	public void setHp(float hp) {
-		this.hp = hp;
-	}
-
-	public float getHp() {
-		return hp;
-	}
-
-	public float getHp_max() {
-		return hp_max;
-	}
-
-	public float getFood() {
-		return food;
-	}
-
-	public float getFood_max() {
-		return food_max;
-	}
 
 	public float getSize() {
 		return size;
@@ -73,17 +48,7 @@ public class Status implements Cloneable {
 		return feed;
 	}
 
-	public void setHp_max(float hp_max) {
-		this.hp_max = hp_max;
-	}
 
-	public void setFood(float food) {
-		this.food = food;
-	}
-
-	public void setFood_max(float food_max) {
-		this.food_max = food_max;
-	}
 
 	public void setSize(float size) {
 		this.size = size;
@@ -101,13 +66,22 @@ public class Status implements Cloneable {
 		this.feed = feed;
 	}
 
-	public float getHp_default() {
-		return hp_default;
+	public float getEnergy() {
+		return energy;
 	}
 
-	public void setHp_default(float hp_default) {
-		this.hp_default = hp_default;
+	public void setEnergy(float energy) {
+		this.energy = energy;
 	}
+
+	public float getEnergy_max() {
+		return energy_max;
+	}
+
+	public void setEnergy_max(float energy_max) {
+		this.energy_max = energy_max;
+	}
+
 
 
 

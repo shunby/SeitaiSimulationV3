@@ -2,12 +2,15 @@ package seitaiv3.main.world;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.WindowStateListener;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
+import seitaiv3.main.Main;
 import seitaiv3.main.stuff.Stuff;
+import seitaiv3.main.window.WindowController;
 import seitaiv3.main.world.chunk.Chunk;
 
 public class World {
@@ -53,15 +56,26 @@ public class World {
 
 		isUpdating = true;
 
+		//背景の描画
+		g.setColor(new Color(160, 82, 45));
+		g.fillRect(0, 0, 700, 700);
+
 		//罫線の描画
 		g.setColor(Color.black);
-		for(int x = 0; x < chunks.length; x++){
-			g.drawLine(x * chunkLength, 0, x * chunkLength, height);
+		for(int x = 0; x <= chunks.length; x++){
+			g.drawLine(x * chunkLength - (int)camera.getX(), 0, x * chunkLength - (int)camera.getX(), height);
 		}
-		for(int y = 0; y < chunks[0].length; y++){
-			g.drawLine(0, y * chunkLength, width, y * chunkLength);
+		for(int y = 0; y <= chunks[0].length; y++){
+			g.drawLine(0, y * chunkLength - (int)camera.getY(), width, y * chunkLength - (int)camera.getY());
 		}
+		//カメラ位置の更新
+		WindowController wc = Main.get().getWindowController();
+		int move = 30;
+		int addX = (wc.left ? -move : 0) + (wc.right ? move : 0);
+		int addY = (wc.up ? -move : 0) + (wc.down ? move : 0);
+		camera.add(addX, addY);
 
+		//更新
 		stuffs.forEach((stuff)->stuff.preUpdate());
 		collisionCheck();
 
@@ -123,6 +137,10 @@ public class World {
 		float cx = camera.getX();
 		float cy = camera.getY();
 		return cx <= x && x <= cx + 700 && cy <= y && y <= cy + 700;
+	}
+
+	public Pos getWindowPos(Pos p){
+		return new Pos(p.getX() - camera.getX(), p.getY() - camera.getY());
 	}
 
 	public int getWidth() {

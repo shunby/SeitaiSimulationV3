@@ -41,19 +41,15 @@ public class MainThread implements Runnable {
 		Random r = new Random();
 		for(int i = 0; i < 1000; i++){
 			Status s = new Status();
-			s.setHp(120);
-			s.setHp_max(1200);
-			s.setFood(120);
-			s.setFood_max(1200);
+			s.setEnergy(900);
+			s.setEnergy_max(1200);
 			s.setSize(30);
 			Living l1 = new Plant(new Pos(r.nextInt(2500) + 100, r.nextInt(2500) + 100), world, s);
 			world.registerStuff(l1);
 
 			Status s1 = new Status();
-			s1.setHp(120);
-			s1.setHp_max(1200);
-			s1.setFood(120);
-			s1.setFood_max(1200);
+			s1.setEnergy(900);
+			s1.setEnergy_max(1200);
 			s1.setSize(30);
 			s1.setSpeed(5);
 			s1.setFeed(r.nextFloat());
@@ -65,13 +61,11 @@ public class MainThread implements Runnable {
 		BufferedImage img = new BufferedImage(700, 700, BufferedImage.TYPE_INT_ARGB);
 		WritableImage wimg = new WritableImage(700, 700);
 		Graphics2D g = (Graphics2D)img.getGraphics();
-		Color bgColor = new Color(160, 82, 45);
 		GraphicsContext g2 = main.getWindowController().getCanvas().getGraphicsContext2D();
 		while (main.isRunning) {
 			long ms = System.currentTimeMillis();
-			update(wimg, img, g, g2, bgColor);
+			update(wimg, img, g, g2);
 			long timeout = 64 - (System.currentTimeMillis() - ms);
-			System.out.println(timeout);
 			Thread.sleep(timeout < 1 ? -timeout:timeout);
 		}
 		}catch(Exception e){
@@ -81,7 +75,7 @@ public class MainThread implements Runnable {
 	}
 
 
-	private void update(WritableImage wimg, BufferedImage img, Graphics2D g, GraphicsContext g2, Color bgColor){
+	private void update(WritableImage wimg, BufferedImage img, Graphics2D g, GraphicsContext g2){
 		try{
 			time++;
 
@@ -89,10 +83,6 @@ public class MainThread implements Runnable {
 				System.out.println("Running Garbage Collection");
 				System.gc();
 			}
-
-			g.setColor(bgColor);
-			g.fillRect(0, 0, 700, 700);
-
 
 
 			world.update(g);

@@ -33,6 +33,9 @@ public class Main extends Application{
 		//画面初期化-----------
 		root = load();
 		stage.setScene(new Scene(root));
+		root.setOnKeyPressed((ev)->wController.onKeyPressed(ev));
+		root.setOnKeyReleased((ev)->wController.onKeyReleased(ev));
+		root.requestFocus();
 		stage.show();
 		stage.setOnCloseRequest((ev)->isRunning = false);
 		wController.initWindow();

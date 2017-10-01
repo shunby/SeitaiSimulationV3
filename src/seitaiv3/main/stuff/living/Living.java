@@ -40,27 +40,30 @@ public abstract class Living extends Stuff {
 	@Override
 	protected void updateVector() {
 		super.updateVector();
-		pos.add(moving.getNormalize().mul(status.getSpeed()));
+		if(!isdead)pos.add(moving.getNormalize().mul(status.getSpeed()));
 
 	}
 
 
 	@Override
-	public void update() {
+	public final void update() {
 		super.update();
 
-		if(status.getFood() > 0){
-			status.setFood(status.getFood() - 1);
-		}else{
-			status.setHp(status.getHp() - 1);
-		}
+		status.setEnergy(status.getEnergy()-1);
 
-		if(!isdead && status.getHp() <= status.getHp_max() * DEATH_RATE){//死亡判定
+		if(!isdead && status.getEnergy() <= status.getEnergy_max() * DEATH_RATE){//死亡判定
 			die();
-		}else if(status.getHp() <= 0){//消滅判定
+		}else if(status.getEnergy() <= 0){//消滅判定
 			isremovable = true;
 		}
+		if(isdead) updateDead();
+			else updateAliving();
 	}
+
+	/**生存時の更新処理*/
+	public abstract void updateAliving();
+	/**死亡時の更新処理*/
+	public abstract void updateDead();
 
 
 
@@ -74,7 +77,8 @@ public abstract class Living extends Stuff {
 	@Override
 	public void draw(Graphics2D g) {
 		int siz = (int)status.getSize();
-		g.drawImage(img, (int)pos.getX() - siz/2, (int)pos.getY() - siz/2, siz, siz, null);
+		Pos p = world.getWindowPos(pos);
+		g.drawImage(img, (int)p.getX() - siz/2, (int)p.getY() - siz/2, siz, siz, null);
 	}
 
 	//get/set-----------------------------------
@@ -112,11 +116,10 @@ public abstract class Living extends Stuff {
 			if(t == LivingType.Plant)return true;
 			break;
 		case FleshEater:
-			if(t == LivingType.PlantEater)return true;
-			break;
-		case AnyEater:
 			if(t != LivingType.Plant)return true;
 			break;
+		case AnyEater:
+			return true;
 		}
 		return false;
 	}
