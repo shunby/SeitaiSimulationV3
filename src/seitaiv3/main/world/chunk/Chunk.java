@@ -25,7 +25,7 @@ public class Chunk {
 		this.y = y;
 		this.energy = 1000;
 		this.energy_max = 10000;
-		this.sun = 0.7f;
+		this.sun = 0.5f;
 		stuffs = new HashSet<>();
 	}
 

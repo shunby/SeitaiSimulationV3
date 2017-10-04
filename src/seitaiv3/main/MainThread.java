@@ -46,18 +46,30 @@ public class MainThread implements Runnable {
 			s.setSize(30);
 			Living l1 = new Plant(new Pos(r.nextInt(2500) + 100, r.nextInt(2500) + 100), world, s);
 			world.registerStuff(l1);
-
+		}
+		for(int i = 0;i < 300; i++){
 			Status s1 = new Status();
 			s1.setEnergy(900);
 			s1.setEnergy_max(1200);
 			s1.setSize(30);
 			s1.setSpeed(5);
-			s1.setFeed(r.nextFloat());
+			s1.setFeed(0f);
+			Living l2 = new Animal(new Pos(r.nextInt(2500) + 100, r.nextInt(2500) + 100), world, s1);
+			world.registerStuff(l2);
+		}
+		for(int i = 0;i < 20; i++){
+			Status s1 = new Status();
+			s1.setEnergy(900);
+			s1.setEnergy_max(1200);
+			s1.setSize(30);
+			s1.setSpeed(5);
+			s1.setFeed(1f);
 			Living l2 = new Animal(new Pos(r.nextInt(2500) + 100, r.nextInt(2500) + 100), world, s1);
 			world.registerStuff(l2);
 		}
 
-		//Graphics2D g = main.getWindowController().getCanvas().getGraphicsContext2D();
+
+
 		BufferedImage img = new BufferedImage(700, 700, BufferedImage.TYPE_INT_ARGB);
 		WritableImage wimg = new WritableImage(700, 700);
 		Graphics2D g = (Graphics2D)img.getGraphics();

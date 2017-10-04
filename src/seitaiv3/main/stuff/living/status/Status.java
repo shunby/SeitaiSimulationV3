@@ -8,6 +8,7 @@ public class Status implements Cloneable {
 	/**ステータス*/
 	private float energy, energy_max, size, speed,
 		pgrowth_speed, feed;
+	private int race;
 
 
 	public Status(){
@@ -24,6 +25,7 @@ public class Status implements Cloneable {
 		res.speed = speed;
 		res.pgrowth_speed = pgrowth_speed;
 		res.feed = feed;
+		res.race = race;
 
 		return res;
 	}
@@ -48,7 +50,13 @@ public class Status implements Cloneable {
 		return feed;
 	}
 
+	public int getRace(){
+		return race;
+	}
 
+	public void setRace(int race){
+		this.race = race;
+	}
 
 	public void setSize(float size) {
 		this.size = size;
