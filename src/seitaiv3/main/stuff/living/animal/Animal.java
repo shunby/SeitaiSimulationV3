@@ -78,7 +78,7 @@ public class Animal extends Living {
 				if(0 <= x  && x < w && 0 <= y && y < h){//チャンクが存在するか
 					for(Stuff stuff: world.getChunks()[x][y].getStuffs()){
 						if(stuff != this && stuff instanceof Living){
-							if(((Living)stuff).isFeed(this)){
+							if(((Living)stuff).isFeedOf(this)){
 								float distance = Pos.getDistance(pos, stuff.getPos());
 								if(distance < nearest){
 									nearest = distance;
@@ -97,7 +97,7 @@ public class Animal extends Living {
 	/**餌をとる*/
 	protected void catchFeed(){
 		collidedList.forEach((col)->{
-			if(col instanceof Living && ((Living)col).isFeed(this)){
+			if(col instanceof Living && ((Living)col).isFeedOf(this)){
 				eat((Living)col);
 			}
 		});
@@ -105,11 +105,11 @@ public class Animal extends Living {
 
 	/**食べる*/
 	protected void eat(Living liv){
-		int gain = 2;
+		float atk = status.getAttack();
 		Status stat = liv.getStatus();
 
-		stat.setEnergy(stat.getEnergy() - gain);
-		status.setEnergy(status.getEnergy() + gain);
+		stat.setEnergy(stat.getEnergy() - atk);
+		status.setEnergy(status.getEnergy() + atk);
 
 	}
 

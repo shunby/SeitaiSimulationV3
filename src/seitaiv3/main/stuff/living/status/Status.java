@@ -6,7 +6,7 @@ package seitaiv3.main.stuff.living.status;
  */
 public class Status implements Cloneable {
 	/**ステータス*/
-	private float energy, energy_max, size, speed,
+	private float energy, energy_max, size, speed, attack,
 		pgrowth_speed, feed;
 	private int race;
 
@@ -26,6 +26,7 @@ public class Status implements Cloneable {
 		res.pgrowth_speed = pgrowth_speed;
 		res.feed = feed;
 		res.race = race;
+		res.attack = attack;
 
 		return res;
 	}
@@ -33,6 +34,13 @@ public class Status implements Cloneable {
 
 	//get/set-------------------------------------------
 
+	public float getAttack(){
+		return attack;
+	}
+
+	public void setAttack(float attack){
+		this.attack = attack;
+	}
 
 	public float getSize() {
 		return size;

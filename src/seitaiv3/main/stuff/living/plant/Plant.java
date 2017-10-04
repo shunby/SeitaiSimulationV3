@@ -28,7 +28,7 @@ public class Plant extends Living {
 
 	@Override
 	public void updateAliving() {
-		status.setEnergy(status.getEnergy() + chunk.gainEnergy(1) + chunk.getSun());
+		status.setEnergy(status.getEnergy() + chunk.gainEnergy(1f) + chunk.getSun());
 		if(world.rand.nextInt(600) == 1){
 			for(int i = 0; i < 2; i++){
 				Status s = new Status();

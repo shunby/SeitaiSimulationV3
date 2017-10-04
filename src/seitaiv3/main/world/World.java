@@ -38,7 +38,7 @@ public class World {
 		chunks = new Chunk[width/chunkLength][height/chunkLength];
 		for(int x = 0; x < width/chunkLength; x++){
 			for(int y = 0; y < height/chunkLength; y++){
-				chunks[x][y] = new Chunk(x, y);
+				chunks[x][y] = new Chunk(x, y, this);
 			}
 		}
 		stuffs = new HashSet<>();
@@ -63,7 +63,7 @@ public class World {
 		//チャンクの更新
 		for(int x = 0; x < chunks.length; x++){
 			for(int y = 0; y < chunks[0].length; y++){
-				chunks[x][y].update();
+				chunks[x][y].update(g);
 			}
 		}
 
@@ -164,6 +164,10 @@ public class World {
 
 	public Chunk[][] getChunks(){
 		return chunks;
+	}
+
+	public int getChunkLength(){
+		return chunkLength;
 	}
 
 

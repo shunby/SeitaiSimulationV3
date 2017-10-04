@@ -49,12 +49,15 @@ public abstract class Living extends Stuff {
 
 		if(!isdead && status.getEnergy() <= status.getEnergy_max() * DEATH_RATE){//死亡判定
 			die();
-		}else{//消滅判定
+		}else if(isdead){//消滅判定
 			chunk.gainEnergy(-1);
 			if(status.getEnergy() <= 0)isremovable = true;
 		}
-		if(isdead) updateDead();
-			else updateAliving();
+		if(isdead) {
+			updateDead();
+		}else {
+			updateAliving();
+		}
 	}
 
 	/**生存時の更新処理*/
@@ -124,8 +127,9 @@ public abstract class Living extends Stuff {
 	}
 
 
-	public boolean isFeed(Living animal) {
+	public boolean isFeedOf(Living animal) {
 		LivingType t = getType();
+		if(getRacialDistance((Living)animal) > 1000000000)return false;
 		switch(animal.getType()){
 		case PlantEater:
 			if(t == LivingType.Plant)return true;
@@ -137,6 +141,11 @@ public abstract class Living extends Stuff {
 			return true;
 		}
 		return false;
+	}
+
+	/**血の隔たり*/
+	public int getRacialDistance(Living l){
+		return Math.abs(l.getStatus().getRace() - getStatus().getRace());
 	}
 
 }

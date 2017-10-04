@@ -1,11 +1,14 @@
 package seitaiv3.main.world.chunk;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.world.Pos;
+import seitaiv3.main.world.World;
 
 public class Chunk {
 	/**チャンク位置*/
@@ -18,20 +21,33 @@ public class Chunk {
 	/**最大内蔵エネルギー*/
 	private float energy_max;
 
+	private World world;
+
 	private Set<Stuff> stuffs;
 
-	public Chunk(int x, int y){
+	public Chunk(int x, int y, World world){
 		this.x = x;
 		this.y = y;
-		this.energy = 1000;
-		this.energy_max = 10000;
+		this.world = world;
+		this.energy = 10000;
+		this.energy_max = 100000;
 		this.sun = 0.5f;
 		stuffs = new HashSet<>();
 	}
 
 	/**フレームごとの更新処理*/
-	public void update(){
+	public void update(Graphics2D g){
+		if(energy > energy_max)energy_max = energy;
+		int l = world.getChunkLength();
+		if(world.isInCamera(new Pos(x * l, y * l))
+				|| world.isInCamera(new Pos(x * l + l, y * l))
+				|| world.isInCamera(new Pos(x * l, y * l + l))
+				|| world.isInCamera(new Pos(x * l + l, y * l + l))){
+			Pos p = world.getWindowPos(new Pos(x * l, y * l ));
+			g.setColor(Color.BLACK);
+			g.drawString(String.format("%.1f", energy), p.getX() + 10, p.getY() + 10);
 
+		}
 	}
 
 	public void collisionCheck(){
@@ -76,7 +92,10 @@ public class Chunk {
 
 	public float gainEnergy(float gain){
 		if(gain <= energy){
+			System.out.println(energy);
 			energy-=gain;
+			System.out.println(energy);
+			System.out.println("====");
 			return gain;
 		}else{
 			gain = energy;

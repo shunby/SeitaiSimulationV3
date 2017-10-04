@@ -44,6 +44,7 @@ public class MainThread implements Runnable {
 			s.setEnergy(900);
 			s.setEnergy_max(1200);
 			s.setSize(30);
+
 			Living l1 = new Plant(new Pos(r.nextInt(2500) + 100, r.nextInt(2500) + 100), world, s);
 			world.registerStuff(l1);
 		}
@@ -54,6 +55,8 @@ public class MainThread implements Runnable {
 			s1.setSize(30);
 			s1.setSpeed(5);
 			s1.setFeed(0f);
+			s1.setRace(r.nextInt());
+			s1.setAttack(2f);
 			Living l2 = new Animal(new Pos(r.nextInt(2500) + 100, r.nextInt(2500) + 100), world, s1);
 			world.registerStuff(l2);
 		}
@@ -64,6 +67,8 @@ public class MainThread implements Runnable {
 			s1.setSize(30);
 			s1.setSpeed(5);
 			s1.setFeed(1f);
+			s1.setRace(r.nextInt());
+			s1.setAttack(3f);
 			Living l2 = new Animal(new Pos(r.nextInt(2500) + 100, r.nextInt(2500) + 100), world, s1);
 			world.registerStuff(l2);
 		}
