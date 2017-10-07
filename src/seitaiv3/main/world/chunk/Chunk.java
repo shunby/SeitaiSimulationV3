@@ -92,10 +92,7 @@ public class Chunk {
 
 	public float gainEnergy(float gain){
 		if(gain <= energy){
-			System.out.println(energy);
 			energy-=gain;
-			System.out.println(energy);
-			System.out.println("====");
 			return gain;
 		}else{
 			gain = energy;
