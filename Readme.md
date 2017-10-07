@@ -1,7 +1,7 @@
 # SeitaiSimulationv3
 
 ## author
-shunvy
+shunby
 
 ## 環境
 java 1.8
