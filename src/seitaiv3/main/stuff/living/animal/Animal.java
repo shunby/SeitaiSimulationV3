@@ -3,9 +3,7 @@
  */
 package seitaiv3.main.stuff.living.animal;
 
-import java.awt.Graphics2D;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.function.Predicate;
 
 import seitaiv3.main.Resources;
 import seitaiv3.main.stuff.Stuff;
@@ -50,7 +48,8 @@ public class Animal extends Living {
 
 	@Override
 	public void updateAliving() {
-		chaseFeed();
+		if(isFull())chase((l)->l.isFeed(this));
+		else chase((l)->l.isLove(this));
 		if(target != null){
 			moving = target.getPos().getSub(new Vector(pos.getX(), pos.getY()));
 		}else if(world.rand.nextInt(50)==0)moving.set(world.rand.nextInt(5) - 2, world.rand.nextInt(5) - 2);
@@ -63,8 +62,8 @@ public class Animal extends Living {
 		super.postUpdate();
 	}
 
-	/**餌を追う*/
-	protected void chaseFeed(){
+	/**funcで渡された条件に合致するもののうち最近のLivingを追う*/
+	protected void chase(Predicate<Living> func){
 		int eye = 3;
 
 
@@ -78,7 +77,7 @@ public class Animal extends Living {
 				if(0 <= x  && x < w && 0 <= y && y < h){//チャンクが存在するか
 					for(Stuff stuff: world.getChunks()[x][y].getStuffs()){
 						if(stuff != this && stuff instanceof Living){
-							if(((Living)stuff).isFeedOf(this)){
+							if(func.test((Living)stuff)){
 								float distance = Pos.getDistance(pos, stuff.getPos());
 								if(distance < nearest){
 									nearest = distance;
@@ -97,7 +96,7 @@ public class Animal extends Living {
 	/**餌をとる*/
 	protected void catchFeed(){
 		collidedList.forEach((col)->{
-			if(col instanceof Living && ((Living)col).isFeedOf(this)){
+			if(col instanceof Living && isFeed((Living)col)){
 				eat((Living)col);
 			}
 		});
@@ -113,6 +112,10 @@ public class Animal extends Living {
 
 	}
 
+	/**満腹判定*/
+	public boolean isFull(){
+		return status.getEnergy() > (status.getEnergy_max() * 3) / 5;
+	}
 
 	@Override
 	protected void onRemoved() {

@@ -30,22 +30,24 @@ public class Chunk {
 		this.y = y;
 		this.world = world;
 		this.energy = 10000;
-		this.energy_max = 100000;
+		this.energy_max = 15000;
 		this.sun = 0.5f;
 		stuffs = new HashSet<>();
 	}
 
 	/**フレームごとの更新処理*/
 	public void update(Graphics2D g){
-		if(energy > energy_max)energy_max = energy;
+		if(energy > energy_max)energy = energy_max;
 		int l = world.getChunkLength();
 		if(world.isInCamera(new Pos(x * l, y * l))
 				|| world.isInCamera(new Pos(x * l + l, y * l))
 				|| world.isInCamera(new Pos(x * l, y * l + l))
 				|| world.isInCamera(new Pos(x * l + l, y * l + l))){
 			Pos p = world.getWindowPos(new Pos(x * l, y * l ));
-			g.setColor(Color.BLACK);
-			g.drawString(String.format("%.1f", energy), p.getX() + 10, p.getY() + 10);
+			g.setColor(new Color(energy/energy_max, energy/energy_max, 0));
+			g.fillRect((int)p.getX(), (int)p.getY(), l, l);
+			g.setColor(Color.BLUE);
+			g.drawString(String.format("%.1f", energy), p.getX() + 3, p.getY() + 10);
 
 		}
 	}

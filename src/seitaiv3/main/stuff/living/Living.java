@@ -127,15 +127,16 @@ public abstract class Living extends Stuff {
 	}
 
 
-	public boolean isFeedOf(Living animal) {
+	public boolean isFeed(Living animal) {
 		LivingType t = getType();
-		if(getRacialDistance((Living)animal) > 1000000000)return false;
-		switch(animal.getType()){
+		LivingType t1 = animal.getType();
+		if(getRacialDistance((Living)animal) < 10000)return false;
+		switch(t){
 		case PlantEater:
-			if(t == LivingType.Plant)return true;
+			if(t1 == LivingType.Plant)return true;
 			break;
 		case FleshEater:
-			if(t != LivingType.Plant)return true;
+			if(t1 != LivingType.Plant)return true;
 			break;
 		case AnyEater:
 			return true;
@@ -146,6 +147,11 @@ public abstract class Living extends Stuff {
 	/**血の隔たり*/
 	public int getRacialDistance(Living l){
 		return Math.abs(l.getStatus().getRace() - getStatus().getRace());
+	}
+
+	public boolean isLove(Living animal) {
+		if(animal.getType() == getType() && getRacialDistance(animal) > 10000)return true;
+		return false;
 	}
 
 }
