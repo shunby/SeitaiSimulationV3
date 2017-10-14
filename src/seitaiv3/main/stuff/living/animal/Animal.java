@@ -48,12 +48,12 @@ public class Animal extends Living {
 
 	@Override
 	public void updateAliving() {
-		if(isFull())chase((l)->l.isFeed(this));
-		else chase((l)->l.isLove(this));
+		if(!isFull())chase((l)->isFeed(l));
+		else chase((l)->!l.isDead() && isLove(l));
 		if(target != null){
 			moving = target.getPos().getSub(new Vector(pos.getX(), pos.getY()));
 		}else if(world.rand.nextInt(50)==0)moving.set(world.rand.nextInt(5) - 2, world.rand.nextInt(5) - 2);
-		if(isFull()){
+		if(!isFull()){
 			catchFeed();
 		}else{
 			catchLove();
@@ -64,10 +64,10 @@ public class Animal extends Living {
 
 	private void catchLove() {
 		collidedList.forEach((col)->{
-			if(col instanceof Living && isLove((Living)col)){
+			if(col instanceof Living && !((Living)col).isDead() && isLove((Living)col)){
 				Status cstat = Status.makeChildStatus(status, ((Living)col).getStatus());
 
-				Animal child = new Animal(new Pos(pos.getX() + 3f, pos.getY() + 3f), world, cstat);
+				Animal child = new Animal(new Pos(pos.getX() + 15f, pos.getY() + 15f), world, cstat);
 				world.registerStuff(child);
 
 			}
@@ -132,7 +132,7 @@ public class Animal extends Living {
 
 	/**満腹判定*/
 	public boolean isFull(){
-		return status.getEnergy() > (status.getEnergy_max() * 3) / 5;
+		return status.getEnergy() > (status.getEnergy_max() * 3f) / 5f;
 	}
 
 	@Override

@@ -41,6 +41,7 @@ public abstract class Stuff {
 		this.speed = new Vector();
 		this.accel = new Vector();
 		collidedList = new HashSet<>();
+		pos.adjust(world);
 		chunk = world.getChunk(pos);
 	}
 
