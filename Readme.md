@@ -7,4 +7,5 @@ shunby
 java 1.8
 
 ## 実行可能jar
-SeitaiSimulation_beta_xx.jarを実行
+- resフォルダとSeitaiSimulation_beta_xx.jarを同じフォルダにダウンロード
+- SeitaiSimulation_beta_xx.jarを実行
