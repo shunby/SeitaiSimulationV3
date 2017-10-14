@@ -75,12 +75,7 @@ public class World {
 		for(int y = 0; y <= chunks[0].length; y++){
 			g.drawLine(0, y * chunkLength - (int)camera.getY(), width, y * chunkLength - (int)camera.getY());
 		}
-		//カメラ位置の更新
-		WindowController wc = Main.get().getWindowController();
-		int move = 30;
-		int addX = (wc.left ? -move : 0) + (wc.right ? move : 0);
-		int addY = (wc.up ? -move : 0) + (wc.down ? move : 0);
-		camera.add(addX, addY);
+
 
 		//更新
 		stuffs.forEach((stuff)->stuff.preUpdate());
@@ -97,8 +92,16 @@ public class World {
 		stuffs.forEach((stuff)->stuff.postUpdate());
 
 		for(Iterator<Stuff> iter = stuffs.iterator(); iter.hasNext();){
+			//削除可能なオブジェクトを削除
 			if(iter.next().isRemovable())iter.remove();
 		}
+
+		//カメラ位置の更新
+		WindowController wc = Main.get().getWindowController();
+		int move = 30;
+		int addX = (wc.left ? -move : 0) + (wc.right ? move : 0);
+		int addY = (wc.up ? -move : 0) + (wc.down ? move : 0);
+		camera.add(addX, addY);
 
 
 
