@@ -53,9 +53,27 @@ public class Animal extends Living {
 		if(target != null){
 			moving = target.getPos().getSub(new Vector(pos.getX(), pos.getY()));
 		}else if(world.rand.nextInt(50)==0)moving.set(world.rand.nextInt(5) - 2, world.rand.nextInt(5) - 2);
-		catchFeed();
+		if(isFull()){
+			catchFeed();
+		}else{
+			catchLove();
+		}
+
 
 	}
+
+	private void catchLove() {
+		collidedList.forEach((col)->{
+			if(col instanceof Living && isLove((Living)col)){
+				Status cstat = Status.makeChildStatus(status, ((Living)col).getStatus());
+
+				Animal child = new Animal(new Pos(pos.getX() + 3f, pos.getY() + 3f), world, cstat);
+				world.registerStuff(child);
+
+			}
+		});
+	}
+
 
 	@Override
 	public void postUpdate() {
