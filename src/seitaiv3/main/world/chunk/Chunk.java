@@ -2,8 +2,10 @@ package seitaiv3.main.world.chunk;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import seitaiv3.main.stuff.Stuff;
@@ -23,7 +25,7 @@ public class Chunk {
 
 	private World world;
 
-	private Set<Stuff> stuffs;
+	private List<Stuff> stuffs;
 
 	public Chunk(int x, int y, World world){
 		this.x = x;
@@ -32,7 +34,7 @@ public class Chunk {
 		this.energy = 10000;
 		this.energy_max = 15000;
 		this.sun = 0.5f;
-		stuffs = new HashSet<>();
+		stuffs = new ArrayList<>();
 	}
 
 	/**フレームごとの更新処理*/
@@ -79,7 +81,7 @@ public class Chunk {
 		}
 	}
 
-	public Set<Stuff> getStuffs(){
+	public List<Stuff> getStuffs(){
 		return stuffs;
 	}
 

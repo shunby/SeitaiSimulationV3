@@ -3,8 +3,10 @@ package seitaiv3.main.world;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.WindowStateListener;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -17,9 +19,9 @@ public class World {
 	/**幅と奥行き*/
 	private int width, height;
 	/**オブジェクト*/
-	private Set<Stuff> stuffs;
+	private List<Stuff> stuffs;
 	/**バッファ*/
-	private Set<Stuff> stuffsBuffer;
+	private List<Stuff> stuffsBuffer;
 	/**更新処理中か*/
 	private boolean isUpdating;
 	/**random*/
@@ -41,8 +43,8 @@ public class World {
 				chunks[x][y] = new Chunk(x, y, this);
 			}
 		}
-		stuffs = new HashSet<>();
-		stuffsBuffer = new HashSet<>();
+		stuffs = new ArrayList<>();
+		stuffsBuffer = new ArrayList<>();
 		camera = new Pos(0, 0);
 	}
 
@@ -161,7 +163,7 @@ public class World {
 		return height;
 	}
 
-	public Set<Stuff> getStuffs(){
+	public List<Stuff> getStuffs(){
 		return stuffs;
 	}
 

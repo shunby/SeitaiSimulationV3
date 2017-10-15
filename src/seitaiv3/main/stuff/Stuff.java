@@ -24,7 +24,7 @@ public abstract class Stuff {
 	/**このオブジェクトのいるチャンク*/
 	protected Chunk chunk;
 	/**衝突リスト*/
-	protected Set<Stuff> collidedList;
+	protected List<Stuff> collidedList;
 	/**死亡フラグ*/
 	protected boolean isdead;
 	/**消滅フラグ*/
@@ -40,7 +40,7 @@ public abstract class Stuff {
 		this.world = world;
 		this.speed = new Vector();
 		this.accel = new Vector();
-		collidedList = new HashSet<>();
+		collidedList = new ArrayList<>(10);
 		pos.adjust(world);
 		chunk = world.getChunk(pos);
 	}
@@ -112,8 +112,10 @@ public abstract class Stuff {
 	 */
 	public void remove(){
 		collidedList.clear();
+		collidedList = null;
 		chunk.getStuffs().remove(this);
 		world = null;
+
 		isremoved=true;
 		onRemoved();
 	}

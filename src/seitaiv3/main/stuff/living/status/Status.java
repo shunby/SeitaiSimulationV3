@@ -78,9 +78,8 @@ public class Status implements Cloneable {
 					(r.nextBoolean() ? status.attack : status2.attack);
 
 		res.energy_max = res.size * 40;
-		res.energy = res.energy_max / 5;
-		status.energy -= res.energy_max / 10;
-		status2.energy -= res.energy_max / 10;
+		res.energy = res.energy_max / 3f;
+		status.energy -= res.energy_max / 3f;
 
 		return res;
 	}
