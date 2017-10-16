@@ -9,6 +9,7 @@ import seitaiv3.main.Resources;
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.stuff.Vector;
 import seitaiv3.main.stuff.living.Living;
+import seitaiv3.main.stuff.living.plant.Plant;
 import seitaiv3.main.stuff.living.status.Status;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
@@ -56,9 +57,11 @@ public class Animal extends Living {
 			moving = target.getPos().getSub(new Vector(pos.getX(), pos.getY()));
 		}else if(world.rand.nextInt(50)==0)moving.set(world.rand.nextInt(5) - 2, world.rand.nextInt(5) - 2);
 
-		catchFeed();
+
 		if(isFull()){
 			catchLove();
+		}else{
+			catchFeed();
 		}
 
 

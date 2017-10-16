@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlEnumValue;
 
 import seitaiv3.main.Main;
 import seitaiv3.main.MainThread;
+import seitaiv3.main.world.World;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -28,12 +29,15 @@ public class WindowController implements Initializable {
 
 	public boolean up, down, left, right;
 
+	private World world;
+
 
 	/**
 	 *
 	 */
 	public WindowController() {
 		main = Main.get();
+		world = main.getMainThread().getWorld();
 	}
 
 	public void onKeyPressed(KeyEvent ev){
@@ -72,7 +76,7 @@ public class WindowController implements Initializable {
 		int time = mainThread.getTime();
 		int sec = time / 60;
 
-		simulateState.setText(String.format("time: %d (%d 分 %d 秒)", time, sec / 60, sec % 60));
+		simulateState.setText(String.format("time: %d (%d 分 %d 秒), \n fe: %d, ae:%d, ge: %d, g: %d", time, sec / 60, sec % 60, world.getFlesheater(), world.getAnyeater(), world.getPlanteater(), world.getPlant()));
 	}
 
 	@Override

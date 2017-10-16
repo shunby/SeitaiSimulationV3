@@ -2,16 +2,15 @@ package seitaiv3.main.world;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.event.WindowStateListener;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
-
 import seitaiv3.main.Main;
 import seitaiv3.main.stuff.Stuff;
+import seitaiv3.main.stuff.living.Living;
+import seitaiv3.main.stuff.living.animal.Animal;
+import seitaiv3.main.stuff.living.plant.Plant;
 import seitaiv3.main.window.WindowController;
 import seitaiv3.main.world.chunk.Chunk;
 
@@ -32,6 +31,8 @@ public class World {
 	private Chunk[][] chunks;
 	/**チャンクの一辺の大きさ*/
 	private final int chunkLength = 50;
+	/**生物数*/
+	private int flesheater, planteater, anyeater, plant;
 
 	public World(int width, int height){
 		this.width = width;
@@ -43,7 +44,51 @@ public class World {
 				chunks[x][y] = new Chunk(x, y, this);
 			}
 		}
-		stuffs = new ArrayList<>();
+		stuffs = new ArrayList<Stuff>(){
+			@Override
+			public boolean add(Stuff e) {
+				if(e instanceof Living){
+					switch(((Living)e).getType()){
+						case AnyEater:
+							anyeater++;
+							break;
+						case FleshEater:
+							flesheater++;
+							break;
+						case Plant:
+							plant++;
+							break;
+						case PlantEater:
+							planteater++;
+							break;
+
+					}
+				}
+				return super.add(e);
+			}
+
+
+			@Override
+			public boolean remove(Object e) {
+				if(e instanceof Living){
+					switch(((Living)e).getType()){
+					case AnyEater:
+						anyeater--;
+						break;
+					case FleshEater:
+						flesheater--;
+						break;
+					case Plant:
+						plant--;
+						break;
+					case PlantEater:
+						planteater--;
+						break;
+					}
+				}
+				return super.remove(e);
+			}
+		};
 		stuffsBuffer = new ArrayList<>();
 		camera = new Pos(0, 0);
 	}
@@ -174,6 +219,24 @@ public class World {
 	public int getChunkLength(){
 		return chunkLength;
 	}
+
+	public int getFlesheater() {
+		return flesheater;
+	}
+
+	public int getPlanteater() {
+		return planteater;
+	}
+
+	public int getAnyeater() {
+		return anyeater;
+	}
+
+	public int getPlant() {
+		return plant;
+	}
+
+
 
 
 
