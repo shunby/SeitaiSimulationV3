@@ -128,11 +128,8 @@ public class Animal extends Living {
 
 	/**食べる*/
 	protected void eat(Living liv){
-		float atk = status.getAttack();
-		Status stat = liv.getStatus();
-
-		stat.setEnergy(stat.getEnergy() - atk);
-		status.setEnergy(status.getEnergy() + atk);
+		status.setEnergy(status.getEnergy() +
+				liv.getStatus().gainEnergy(status.getAttack()));
 
 	}
 

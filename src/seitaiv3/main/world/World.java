@@ -66,28 +66,6 @@ public class World {
 				}
 				return super.add(e);
 			}
-
-
-			@Override
-			public boolean remove(Object e) {
-				if(e instanceof Living){
-					switch(((Living)e).getType()){
-					case AnyEater:
-						anyeater--;
-						break;
-					case FleshEater:
-						flesheater--;
-						break;
-					case Plant:
-						plant--;
-						break;
-					case PlantEater:
-						planteater--;
-						break;
-					}
-				}
-				return super.remove(e);
-			}
 		};
 		stuffsBuffer = new ArrayList<>();
 		camera = new Pos(0, 0);
@@ -140,8 +118,28 @@ public class World {
 
 		for(Iterator<Stuff> iter = stuffs.iterator(); iter.hasNext();){
 			//削除可能なオブジェクトを削除
-			if(iter.next().isRemovable())iter.remove();
+			Stuff e = iter.next();
+			if(e.isRemovable()){
+				iter.remove();
+				if(e instanceof Living){
+					switch(((Living)e).getType()){
+					case AnyEater:
+						anyeater--;
+						break;
+					case FleshEater:
+						flesheater--;
+						break;
+					case Plant:
+						plant--;
+						break;
+					case PlantEater:
+						planteater--;
+						break;
+					}
+				}
+			}
 		}
+
 
 		//カメラ位置の更新
 		WindowController wc = Main.get().getWindowController();

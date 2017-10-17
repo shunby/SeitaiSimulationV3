@@ -31,7 +31,7 @@ public class MainThread implements Runnable {
 
 	public MainThread(){
 		main = Main.get();
-		world = new World(300, 300);
+		world = new World(3000, 3000);
 	}
 
 	@Override
@@ -39,16 +39,16 @@ public class MainThread implements Runnable {
 		try{
 
 		Random r = new Random();
-		for(int i = 0; i < 10; i++){
+		for(int i = 0; i < 1000; i++){
 			Status s = new Status();
 			s.setEnergy(600);
 			s.setEnergy_max(1200);
 			s.setSize(30);
 
-			Living l1 = new Plant(new Pos(r.nextInt(100) + 100, r.nextInt(100) + 100), world, s);
+			Living l1 = new Plant(new Pos(r.nextInt(2800) + 100, r.nextInt(2800) + 100), world, s);
 			world.registerStuff(l1);
 		}
-		for(int i = 0;i < 3; i++){
+		for(int i = 0;i < 300; i++){
 			Status s1 = new Status();
 			s1.setEnergy(600);
 			s1.setEnergy_max(1200);
@@ -57,10 +57,10 @@ public class MainThread implements Runnable {
 			s1.setFeed(0f);
 			s1.setRace(0xffffff);
 			s1.setAttack(2f);
-			Living l2 = new Animal(new Pos(r.nextInt(100) + 100, r.nextInt(100) + 100), world, s1);
+			Living l2 = new Animal(new Pos(r.nextInt(2800) + 100, r.nextInt(2800) + 100), world, s1);
 			world.registerStuff(l2);
 		}
-		for(int i = 0;i < 2; i++){
+		for(int i = 0;i < 20; i++){
 			Status s1 = new Status();
 			s1.setEnergy(600);
 			s1.setEnergy_max(1200);
@@ -69,7 +69,7 @@ public class MainThread implements Runnable {
 			s1.setFeed(1f);
 			s1.setRace(0xff0000);
 			s1.setAttack(3f);
-			Living l2 = new Animal(new Pos(r.nextInt(100) + 100, r.nextInt(100) + 100), world, s1);
+			Living l2 = new Animal(new Pos(r.nextInt(2800) + 100, r.nextInt(2800) + 100), world, s1);
 			world.registerStuff(l2);
 		}
 

@@ -88,6 +88,16 @@ public class Status implements Cloneable {
 
 	//get/set-------------------------------------------
 
+	public float gainEnergy(float gain){
+		if(gain < energy){
+			energy -= gain;
+			return gain;
+		}else{
+			energy = 0;
+			return energy;
+		}
+	}
+
 	public float getAttack(){
 		return attack;
 	}
