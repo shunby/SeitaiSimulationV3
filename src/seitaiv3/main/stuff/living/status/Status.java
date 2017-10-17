@@ -88,15 +88,6 @@ public class Status implements Cloneable {
 
 	//get/set-------------------------------------------
 
-	public float gainEnergy(float gain){
-		if(gain < energy){
-			energy -= gain;
-			return gain;
-		}else{
-			energy = 0;
-			return energy;
-		}
-	}
 
 	public float getAttack(){
 		return attack;
@@ -160,6 +151,17 @@ public class Status implements Cloneable {
 
 	public void setEnergy_max(float energy_max) {
 		this.energy_max = energy_max;
+	}
+
+	public float gainEnergy(float gain) {
+		if(energy > gain){
+			energy -= gain;
+			return gain;
+		}else{
+			float tmp = energy;
+			energy = 0;
+			return tmp;
+		}
 	}
 
 

@@ -68,7 +68,7 @@ public class MainThread implements Runnable {
 			s1.setSpeed(5);
 			s1.setFeed(1f);
 			s1.setRace(0xff0000);
-			s1.setAttack(3f);
+			s1.setAttack(2f);
 			Living l2 = new Animal(new Pos(r.nextInt(2800) + 100, r.nextInt(2800) + 100), world, s1);
 			world.registerStuff(l2);
 		}

@@ -131,7 +131,7 @@ public abstract class Living extends Stuff {
 		if(animal == this)return false;
 		LivingType t = getType();
 		LivingType t1 = animal.getType();
-		if(getRacialDistance((Living)animal) < 100)return false;
+		if(animal == this || getRacialDistance((Living)animal) < 100)return false;
 		switch(t){
 		case PlantEater:
 			if(t1 == LivingType.Plant)return true;
