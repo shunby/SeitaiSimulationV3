@@ -152,6 +152,17 @@ public class Status implements Cloneable {
 		this.energy_max = energy_max;
 	}
 
+	public float gainEnergy(float gain) {
+		if(energy > gain){
+			energy -= gain;
+			return gain;
+		}else{
+			float tmp = energy;
+			energy = 0;
+			return tmp;
+		}
+	}
+
 
 
 

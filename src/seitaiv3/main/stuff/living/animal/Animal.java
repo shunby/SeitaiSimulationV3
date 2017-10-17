@@ -131,8 +131,8 @@ public class Animal extends Living {
 		float atk = status.getAttack();
 		Status stat = liv.getStatus();
 
-		stat.setEnergy(stat.getEnergy() - atk);
-		status.setEnergy(status.getEnergy() + atk);
+
+		status.setEnergy(status.getEnergy() + stat.gainEnergy(atk));
 
 	}
 

@@ -130,7 +130,7 @@ public abstract class Living extends Stuff {
 	public boolean isFeed(Living animal) {
 		LivingType t = getType();
 		LivingType t1 = animal.getType();
-		if(getRacialDistance((Living)animal) < 10)return false;
+		if(animal == this || getRacialDistance((Living)animal) < 100)return false;
 		switch(t){
 		case PlantEater:
 			if(t1 == LivingType.Plant)return true;
@@ -150,7 +150,7 @@ public abstract class Living extends Stuff {
 	}
 
 	public boolean isLove(Living animal) {
-		if(animal.getType() == getType() && getRacialDistance(animal) < 10)return true;
+		if(animal != this && animal.getType() == getType() && getRacialDistance(animal) < 100)return true;
 		return false;
 	}
 
