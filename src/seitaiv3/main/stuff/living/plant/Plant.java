@@ -35,7 +35,7 @@ public class Plant extends Living {
 				s.setEnergy(status.getEnergy()/3);
 				s.setEnergy_max(700);
 				s.setSize(30);
-				Living l1 = new Plant(new Pos(pos.getX() +  world.rand.nextInt(51) - 25, pos.getY() +world.rand.nextInt(51) - 25), world, s);
+				Living l1 = new Plant(new Pos(pos.getX() + world.rand.nextInt(2) - 1 *  status.getSize(), pos.getY() + world.rand.nextInt(2) - 1 * status.getSize()), world, s);
 				world.registerStuff(l1);
 			}
 			status.setEnergy(status.getEnergy()/3);

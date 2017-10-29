@@ -1,9 +1,6 @@
 package seitaiv3.main.stuff.living.status;
 
 import java.util.Random;
-
-import seitaiv3.main.Main;
-
 /**
  * @author 春太朗
  *
@@ -42,24 +39,19 @@ public class Status implements Cloneable {
 
 		double sudden = 0.0015;
 
-		res.energy =
-		r.nextFloat() < sudden ?
-				(status.energy + r.nextInt(100) - 50) :
-					(r.nextBoolean() ? status.energy : status2.energy);
-
 		res.size =
 		r.nextFloat() < sudden ?
-				(status.size + r.nextFloat() * 3 - 1.5f) :
+				(status.size + r.nextFloat() * 1 - 0.5f) :
 					(r.nextBoolean() ? status.size : status2.size);
 
 		res.speed =
 		r.nextFloat() < sudden ?
-				(status.size + r.nextFloat() * 3 - 1.5f) :
+				(status.size + r.nextFloat() * 1 - 0.5f) :
 					(r.nextBoolean() ? status.speed : status2.speed);
 
 		res.pgrowth_speed =
 		r.nextFloat() < sudden ?
-				(status.pgrowth_speed + r.nextFloat() * 3 - 1.5f) :
+				(status.pgrowth_speed + r.nextFloat() * 1 - 0.5f) :
 					(r.nextBoolean() ? status.pgrowth_speed : status2.pgrowth_speed);
 
 		res.feed =
@@ -74,12 +66,13 @@ public class Status implements Cloneable {
 
 		res.attack =
 		r.nextFloat() < sudden ?
-				(status.attack + r.nextFloat() * 3 - 1.5f) :
+				(status.attack + r.nextFloat() * 1 - 0.5f) :
 					(r.nextBoolean() ? status.attack : status2.attack);
 
-		res.energy_max = res.size * 40;
+		res.energy_max = res.size * 40f;
 		res.energy = res.energy_max / 2f;
-		status.energy -= res.energy_max / 2f;
+		status.energy -= res.energy_max / 4f;
+		status2.energy -= res.energy_max / 4f;
 
 		return res;
 	}

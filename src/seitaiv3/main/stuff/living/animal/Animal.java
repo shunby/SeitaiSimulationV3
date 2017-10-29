@@ -14,6 +14,7 @@ import seitaiv3.main.stuff.living.status.Status;
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
 import seitaiv3.main.world.chunk.Chunk;
+import seitaiv3.main.world.chunk.Shelter;
 
 /**
  * 動物
@@ -51,7 +52,12 @@ public class Animal extends Living {
 
 	@Override
 	public void updateAliving() {
-		if(!isFull())chase((l)->isFeed(l));
+
+		if(!isFull())chase((l)->{
+			if(l.getType() != LivingType.Plant)
+				return isFeed(l) && !(l.getChunk() instanceof Shelter);
+			return isFeed(l);
+		});
 		else chase((l)->!l.isDead() && isLove(l));
 		if(target != null){
 			moving = target.getPos().getSub(new Vector(pos.getX(), pos.getY()));

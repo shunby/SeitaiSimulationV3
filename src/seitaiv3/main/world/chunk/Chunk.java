@@ -19,11 +19,11 @@ public class Chunk {
 	/**日照量*/
 	private float sun;
 	/**内蔵エネルギー量*/
-	private float energy;
+	protected float energy;
 	/**最大内蔵エネルギー*/
-	private float energy_max;
+	protected float energy_max;
 
-	private World world;
+	protected World world;
 
 	private List<Stuff> stuffs;
 
@@ -45,13 +45,17 @@ public class Chunk {
 				|| world.isInCamera(new Pos(x * l + l, y * l))
 				|| world.isInCamera(new Pos(x * l, y * l + l))
 				|| world.isInCamera(new Pos(x * l + l, y * l + l))){
-			Pos p = world.getWindowPos(new Pos(x * l, y * l ));
-			g.setColor(new Color(energy/energy_max, energy/energy_max, 0));
-			g.fillRect((int)p.getX(), (int)p.getY(), l, l);
-			g.setColor(Color.BLUE);
-			g.drawString(String.format("%.1f", energy), p.getX() + 3, p.getY() + 10);
-
+			draw(g);
 		}
+	}
+
+	protected void draw(Graphics2D g){
+		int l = world.getChunkLength();
+		Pos p = world.getWindowPos(new Pos(x * l, y * l ));
+		g.setColor(new Color(energy/energy_max, energy/energy_max, 0));
+		g.fillRect((int)p.getX(), (int)p.getY(), l, l);
+		g.setColor(Color.BLUE);
+		g.drawString(String.format("%.1f", energy), p.getX() + 3, p.getY() + 10);
 	}
 
 	public void collisionCheck(){

@@ -137,7 +137,7 @@ public abstract class Living extends Stuff {
 			if(t1 == LivingType.Plant)return true;
 			break;
 		case FleshEater:
-			if(t1 != LivingType.Plant)return true;
+			if(t1 == LivingType.PlantEater)return true;
 			break;
 		case AnyEater:
 			return true;
