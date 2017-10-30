@@ -101,6 +101,11 @@ public abstract class Living extends Stuff {
 
 	//get/set-----------------------------------
 
+	/**満腹判定*/
+	public boolean isFull(){
+		return status.getEnergy() > (status.getEnergy_max() * 9f) / 10f;
+	}
+
 	public Vector getMoving(){
 		return moving;
 	}

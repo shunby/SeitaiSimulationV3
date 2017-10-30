@@ -1,10 +1,7 @@
 package seitaiv3.main.window;
 
-import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import javax.xml.bind.annotation.XmlEnumValue;
 
 import seitaiv3.main.Main;
 import seitaiv3.main.MainThread;

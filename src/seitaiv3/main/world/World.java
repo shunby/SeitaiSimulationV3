@@ -10,10 +10,9 @@ import java.util.Random;
 import seitaiv3.main.Main;
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.stuff.living.Living;
-import seitaiv3.main.stuff.living.animal.Animal;
-import seitaiv3.main.stuff.living.plant.Plant;
 import seitaiv3.main.window.WindowController;
 import seitaiv3.main.world.chunk.Chunk;
+import seitaiv3.main.world.chunk.Plain;
 import seitaiv3.main.world.chunk.Shelter;
 
 public class World {
@@ -43,7 +42,7 @@ public class World {
 		chunks = new Chunk[width/chunkLength][height/chunkLength];
 		for(int x = 0; x < width/chunkLength; x++){
 			for(int y = 0; y < height/chunkLength; y++){
-				chunks[x][y] = rand.nextDouble() < 0.1 ? new Shelter(x, y, this) : new Chunk(x, y, this);
+				chunks[x][y] = rand.nextDouble() < 0.1 ? new Shelter(x, y, this) : new Plain(x, y, this);
 			}
 		}
 		stuffs = new ArrayList<Stuff>(){

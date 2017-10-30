@@ -1,6 +1,5 @@
 package seitaiv3.main.world;
 
-import seitaiv3.main.Main;
 import seitaiv3.main.stuff.Vector;
 
 public class Pos {

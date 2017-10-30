@@ -21,7 +21,7 @@ import seitaiv3.main.world.chunk.Shelter;
  */
 public class Animal extends Living {
 
-	private Living target;
+	//private Living target;
 
 
 	/**
@@ -91,12 +91,14 @@ public class Animal extends Living {
 		super.postUpdate();
 	}
 
-	/**funcで渡された条件に合致するもののうち最近のLivingを追う*/
-	protected void chase(Predicate<Living> func){
+	/**funcで渡された条件に合致するもののうち最近のLivingを探す*/
+	public Living search(Predicate<Living> func){
 		int eye = 3;
 
 
-		target = null;
+
+
+		Living target = null;
 		float nearest = Float.MAX_VALUE;
 		int w = world.getChunks().length;
 		int h = world.getChunks()[0].length;
@@ -120,6 +122,7 @@ public class Animal extends Living {
 
 			}
 		}
+		return target;
 
 	}
 
@@ -139,10 +142,7 @@ public class Animal extends Living {
 
 	}
 
-	/**満腹判定*/
-	public boolean isFull(){
-		return status.getEnergy() > (status.getEnergy_max() * 9f) / 10f;
-	}
+
 
 	@Override
 	protected void onRemoved() {

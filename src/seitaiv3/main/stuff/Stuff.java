@@ -2,11 +2,7 @@ package seitaiv3.main.stuff;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-
 import seitaiv3.main.world.Pos;
 import seitaiv3.main.world.World;
 import seitaiv3.main.world.chunk.Chunk;

@@ -3,9 +3,7 @@
  */
 package seitaiv3.main;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.PixelGrabber;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
