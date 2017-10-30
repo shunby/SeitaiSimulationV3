@@ -3,6 +3,9 @@
  */
 package seitaiv3.main.stuff.living.ai;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import seitaiv3.main.stuff.living.Living;
 import seitaiv3.main.stuff.living.animal.Animal;
 
@@ -12,21 +15,27 @@ import seitaiv3.main.stuff.living.animal.Animal;
  */
 public class AI {
 	private Behave behave;
-	private Condition condition;
+	private List<Condition> conditions;
 	private Animal animal;
 	/**
 	 *
 	 */
-	public AI(Animal animal, Condition condition, Behave behave) {
+	public AI(Animal animal, Behave behave) {
 		this.animal = animal;
-		this.condition = condition;
+		this.conditions = new ArrayList<>(5);
 		this.behave = behave;
 	}
 
 	public boolean update(){
-		if(condition.eval(animal)){
-			behave.behave(animal);
-			return true;
+		boolean eval = true;
+		for(Condition c:conditions){
+			if(!c.eval(animal)){
+				eval = false;
+				break;
+			}
+		}//conditionsの条件がすべて成立すれば真
+		if(eval){
+			return behave.behave(animal);
 		}else{
 			return false;
 		}
@@ -43,8 +52,8 @@ public class AI {
 	/**
 	 * @return condition
 	 */
-	public Condition getCondition() {
-		return condition;
+	public List<Condition> getConditions() {
+		return conditions;
 	}
 
 	/**

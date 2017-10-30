@@ -95,9 +95,6 @@ public class Animal extends Living {
 	public Living search(Predicate<Living> func){
 		int eye = 3;
 
-
-
-
 		Living target = null;
 		float nearest = Float.MAX_VALUE;
 		int w = world.getChunks().length;
@@ -116,6 +113,35 @@ public class Animal extends Living {
 									target = ((Living)stuff);
 								}
 							}
+						}
+					}
+				}
+
+			}
+		}
+		return target;
+
+	}
+
+	/**funcで渡された条件に合致するもののうち最近のChunkを探す*/
+	public Chunk searchChunk(Predicate<Chunk> func){
+		int eye = 3;
+
+		Chunk target = null;
+		float nearest = Float.MAX_VALUE;
+		int w = world.getChunks().length;
+		int h = world.getChunks()[0].length;
+		int l = world.getChunkLength();
+		Chunk[][] chunks = world.getChunks();
+		for(int x = chunk.x - eye;x <= chunk.x + eye; x++){
+			for(int y = chunk.y - eye;y <= chunk.y + eye;y++ ){
+				//チャンクごとに判定
+				if(0 <= x  && x < w && 0 <= y && y < h){//チャンクが存在するか
+					if(func.test(chunks[x][y])){
+						float distance = Pos.getDistance(pos, new Pos((x + 0.5f) * l, (y + 0.5f) * l));
+						if(distance < nearest){
+							nearest = distance;
+							target = chunks[x][y];
 						}
 					}
 				}
