@@ -9,6 +9,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
 import seitaiv3.main.stuff.living.Living;
+import seitaiv3.main.stuff.living.ai.AITable;
 import seitaiv3.main.stuff.living.animal.Animal;
 import seitaiv3.main.stuff.living.plant.Plant;
 import seitaiv3.main.stuff.living.status.Status;
@@ -54,7 +55,8 @@ public class MainThread implements Runnable {
 			s1.setFeed(0f);
 			s1.setRace(0xffffff);
 			s1.setAttack(2f);
-			Living l2 = new Animal(new Pos(r.nextInt(1800) + 100, r.nextInt(1800) + 100), world, s1);
+			Animal l2 = new Animal(new Pos(r.nextInt(1800) + 100, r.nextInt(1800) + 100), world, s1);
+			l2.setAitable(AITable.getRandomTable(l2, r));
 			world.registerStuff(l2);
 		}
 		for(int i = 0;i < 30; i++){
@@ -66,7 +68,8 @@ public class MainThread implements Runnable {
 			s1.setFeed(1f);
 			s1.setRace(0xff0000);
 			s1.setAttack(2f);
-			Living l2 = new Animal(new Pos(r.nextInt(1800) + 100, r.nextInt(1800) + 100), world, s1);
+			Animal l2 = new Animal(new Pos(r.nextInt(1800) + 100, r.nextInt(1800) + 100), world, s1);
+			l2.setAitable(AITable.getRandomTable(l2, r));
 			world.registerStuff(l2);
 		}
 

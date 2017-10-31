@@ -9,6 +9,7 @@ import seitaiv3.main.Resources;
 import seitaiv3.main.stuff.Stuff;
 import seitaiv3.main.stuff.Vector;
 import seitaiv3.main.stuff.living.Living;
+import seitaiv3.main.stuff.living.ai.AITable;
 import seitaiv3.main.stuff.living.plant.Plant;
 import seitaiv3.main.stuff.living.status.Status;
 import seitaiv3.main.world.Pos;
@@ -21,7 +22,8 @@ import seitaiv3.main.world.chunk.Shelter;
  */
 public class Animal extends Living {
 
-	//private Living target;
+	/**AI*/
+	private AITable aitable;
 
 
 	/**
@@ -31,7 +33,7 @@ public class Animal extends Living {
 	 */
 	public Animal(Pos p, World world, Status status) {
 		super(p, world, status);
-
+		aitable = new AITable(this);
 		int race = status.getRace();
 		//肉食度によって画像を変える
 		switch(getType()){
@@ -53,16 +55,7 @@ public class Animal extends Living {
 	@Override
 	public void updateAliving() {
 
-		if(!isFull())chase((l)->{
-			if(l.getType() != LivingType.Plant)
-				return isFeed(l) && !(l.getChunk() instanceof Shelter);
-			return isFeed(l);
-		});
-		else chase((l)->!l.isDead() && isLove(l));
-		if(target != null){
-			moving = target.getPos().getSub(new Vector(pos.getX(), pos.getY()));
-		}else if(world.rand.nextInt(50)==0)moving.set(world.rand.nextInt(5) - 2, world.rand.nextInt(5) - 2);
-
+		aitable.update();
 
 		if(isFull()){
 			catchLove();
@@ -75,10 +68,11 @@ public class Animal extends Living {
 
 	private void catchLove() {
 		collidedList.forEach((col)->{
-			if(col instanceof Living && !((Living)col).isDead() && isLove((Living)col)){
-				Status cstat = Status.makeChildStatus(status, ((Living)col).getStatus());
+			if(col instanceof Animal && !((Animal)col).isDead() && isLove((Animal)col)){
+				Status cstat = Status.makeChildStatus(status, ((Animal)col).getStatus());
 
 				Animal child = new Animal(new Pos(pos.getX() + 15f, pos.getY() + 15f), world, cstat);
+				AITable ai = AITable.makeChild(world.rand, child, aitable, ((Animal)col).aitable);
 				world.registerStuff(child);
 
 			}
@@ -195,6 +189,18 @@ public class Animal extends Living {
 	public void updateDead() {
 
 	}
+
+
+	public AITable getAitable() {
+		return aitable;
+	}
+
+
+	public void setAitable(AITable aitable) {
+		this.aitable = aitable;
+	}
+
+
 
 }
 
