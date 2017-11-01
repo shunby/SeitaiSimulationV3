@@ -9,7 +9,10 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
 import seitaiv3.main.stuff.living.Living;
+import seitaiv3.main.stuff.living.ai.AI;
 import seitaiv3.main.stuff.living.ai.AITable;
+import seitaiv3.main.stuff.living.ai.Behave;
+import seitaiv3.main.stuff.living.ai.Condition;
 import seitaiv3.main.stuff.living.animal.Animal;
 import seitaiv3.main.stuff.living.plant.Plant;
 import seitaiv3.main.stuff.living.status.Status;
@@ -26,6 +29,8 @@ public class MainThread implements Runnable {
 	private World world;
 	/**ループ回数*/
 	private int time;
+	/**時間が動くか*/
+	public boolean timepass = true;
 
 	public MainThread(){
 		main = Main.get();
@@ -37,7 +42,9 @@ public class MainThread implements Runnable {
 		try{
 
 		Random r = new Random();
-		for(int i = 0; i < 1000; i++){
+
+
+		for(int i = 0; i < 700; i++){
 			Status s = new Status();
 			s.setEnergy(600);
 			s.setEnergy_max(1200);
@@ -56,10 +63,13 @@ public class MainThread implements Runnable {
 			s1.setRace(0xffffff);
 			s1.setAttack(2f);
 			Animal l2 = new Animal(new Pos(r.nextInt(1800) + 100, r.nextInt(1800) + 100), world, s1);
+//			AI ai = new AI(Behave.go_plant);
+//			ai.getConditions().add(Condition.no_condition);
+//			l2.getAitable().getAi().add(ai);
 			l2.setAitable(AITable.getRandomTable(l2, r));
 			world.registerStuff(l2);
 		}
-		for(int i = 0;i < 30; i++){
+		for(int i = 0;i < 25; i++){
 			Status s1 = new Status();
 			s1.setEnergy(600);
 			s1.setEnergy_max(1200);
@@ -67,8 +77,27 @@ public class MainThread implements Runnable {
 			s1.setSpeed(5);
 			s1.setFeed(1f);
 			s1.setRace(0xff0000);
-			s1.setAttack(2f);
+			s1.setAttack(5f);
 			Animal l2 = new Animal(new Pos(r.nextInt(1800) + 100, r.nextInt(1800) + 100), world, s1);
+//			AI ai = new AI(Behave.go_planteater);
+//			ai.getConditions().add(Condition.no_condition);
+//			l2.getAitable().getAi().add(ai);
+			l2.setAitable(AITable.getRandomTable(l2, r));
+			world.registerStuff(l2);
+		}
+		for(int i = 0;i < 0; i++){
+			Status s1 = new Status();
+			s1.setEnergy(600);
+			s1.setEnergy_max(1200);
+			s1.setSize(30);
+			s1.setSpeed(5);
+			s1.setFeed(0.5f);
+			s1.setRace(0xffffff);
+			s1.setAttack(3f);
+			Animal l2 = new Animal(new Pos(r.nextInt(1800) + 100, r.nextInt(1800) + 100), world, s1);
+//			AI ai = new AI(Behave.go_feed);
+//			ai.getConditions().add(Condition.no_condition);
+//			l2.getAitable().getAi().add(ai);
 			l2.setAitable(AITable.getRandomTable(l2, r));
 			world.registerStuff(l2);
 		}
@@ -94,15 +123,12 @@ public class MainThread implements Runnable {
 
 	private void update(WritableImage wimg, BufferedImage img, Graphics2D g, GraphicsContext g2){
 		try{
-			time++;
-
-			if(time % 2000 == 0){
-				System.out.println("Running Garbage Collection");
-				System.gc();
-			}
+			if(timepass)
+				time++;
 
 
-			world.update(g);
+
+			world.update(g, timepass);
 			SwingFXUtils.toFXImage(img, wimg);
 
 			Platform.runLater(()->{

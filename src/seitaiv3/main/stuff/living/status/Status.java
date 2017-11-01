@@ -56,7 +56,7 @@ public class Status implements Cloneable {
 
 		res.feed =
 		r.nextFloat() < sudden ?
-				(status.feed + r.nextFloat()/10f - 0.05f) :
+				(status.feed + r.nextFloat()/5f - 0.1f) :
 					(r.nextBoolean() ? status.feed : status2.feed);
 
 		res.race =
@@ -66,7 +66,7 @@ public class Status implements Cloneable {
 
 		res.attack =
 		r.nextFloat() < sudden ?
-				(status.attack + r.nextFloat() * 1 - 0.5f) :
+				(status.attack + r.nextFloat() * 2 - 1f) :
 					(r.nextBoolean() ? status.attack : status2.attack);
 
 		res.energy_max = res.size * 40f;

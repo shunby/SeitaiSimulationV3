@@ -33,7 +33,7 @@ public class World {
 	/**チャンクの一辺の大きさ*/
 	private final int chunkLength = 50;
 	/**生物数*/
-	private int flesheater, planteater, anyeater, plant;
+	public int flesheater, planteater, anyeater, plant;
 
 	public World(int width, int height){
 		this.width = width;
@@ -75,7 +75,7 @@ public class World {
 	/**
 	 *
 	 */
-	public void update(Graphics2D g)throws Exception {
+	public void update(Graphics2D g, boolean timepass)throws Exception {
 		//バッファの中身を全てリストに追加
 		stuffsBuffer.forEach((stuff)->registerStuff(stuff));
 		stuffsBuffer.clear();
@@ -89,7 +89,7 @@ public class World {
 		//チャンクの更新
 		for(int x = 0; x < chunks.length; x++){
 			for(int y = 0; y < chunks[0].length; y++){
-				chunks[x][y].update(g);
+				chunks[x][y].update(g, timepass);
 			}
 		}
 
@@ -102,41 +102,28 @@ public class World {
 			g.drawLine(0, y * chunkLength - (int)camera.getY(), width, y * chunkLength - (int)camera.getY());
 		}
 
+		if(timepass){
+			//更新
+			stuffs.forEach((stuff)->stuff.preUpdate());
+			collisionCheck();
 
-		//更新
-		stuffs.forEach((stuff)->stuff.preUpdate());
-		collisionCheck();
-
-		for(Iterator<Stuff> iter = stuffs.iterator(); iter.hasNext();){
-			iter.next().update();
+			for(Iterator<Stuff> iter = stuffs.iterator(); iter.hasNext();){
+				iter.next().update();
+			}
 		}
 
 		stuffs.forEach((stuff)->{
 			//描画
 			if(isInCamera(stuff.getPos()))stuff.draw(g);
 		});
-		stuffs.forEach((stuff)->stuff.postUpdate());
+		if(timepass){
+			stuffs.forEach((stuff)->stuff.postUpdate());
 
-		for(Iterator<Stuff> iter = stuffs.iterator(); iter.hasNext();){
-			//削除可能なオブジェクトを削除
-			Stuff e = iter.next();
-			if(e.isRemovable()){
-				iter.remove();
-				if(e instanceof Living){
-					switch(((Living)e).getType()){
-					case AnyEater:
-						anyeater--;
-						break;
-					case FleshEater:
-						flesheater--;
-						break;
-					case Plant:
-						plant--;
-						break;
-					case PlantEater:
-						planteater--;
-						break;
-					}
+			for(Iterator<Stuff> iter = stuffs.iterator(); iter.hasNext();){
+				//削除可能なオブジェクトを削除
+				Stuff e = iter.next();
+				if(e.isRemovable()){
+					iter.remove();
 				}
 			}
 		}

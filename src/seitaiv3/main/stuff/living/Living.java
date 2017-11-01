@@ -69,6 +69,20 @@ public abstract class Living extends Stuff {
 
 	@Override
 	protected boolean onDie() {
+		switch(getType()){
+		case AnyEater:
+			world.anyeater--;
+			break;
+		case FleshEater:
+			world.flesheater--;
+			break;
+		case Plant:
+			world.plant--;
+			break;
+		case PlantEater:
+			world.planteater--;
+			break;
+		}
 		return false;
 	}
 

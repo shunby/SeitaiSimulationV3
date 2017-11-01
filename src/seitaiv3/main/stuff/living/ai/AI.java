@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import seitaiv3.main.stuff.living.Living;
 import seitaiv3.main.stuff.living.animal.Animal;
 
 /**
@@ -17,17 +16,15 @@ import seitaiv3.main.stuff.living.animal.Animal;
 public class AI {
 	private Behave behave;
 	private List<Condition> conditions;
-	private Animal animal;
 	/**
 	 *
 	 */
-	public AI(Animal animal, Behave behave) {
-		this.animal = animal;
+	public AI(Behave behave) {
 		this.conditions = new ArrayList<>(5);
 		this.behave = behave;
 	}
 
-	public boolean update(){
+	public boolean update(Animal animal){
 		boolean eval = true;
 		for(Condition c:conditions){
 			if(!c.eval(animal)){
@@ -42,8 +39,8 @@ public class AI {
 		}
 	}
 
-	public static AI getRandomAI(Animal animal,Random rand){
-		AI ai = new AI(animal, Behave.getRandomBehave(rand));
+	public static AI getRandomAI(Random rand){
+		AI ai = new AI(Behave.getRandomBehave(rand));
 		List<Condition> conditions = ai.conditions;
 		for(int i = 0; i < rand.nextInt(5); i++){
 			conditions.add(Condition.getRandomCondition(rand));
@@ -66,10 +63,4 @@ public class AI {
 		return conditions;
 	}
 
-	/**
-	 * @return living
-	 */
-	public Living getLiving() {
-		return animal;
-	}
 }

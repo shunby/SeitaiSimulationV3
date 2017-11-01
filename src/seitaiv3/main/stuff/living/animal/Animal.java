@@ -55,7 +55,7 @@ public class Animal extends Living {
 	@Override
 	public void updateAliving() {
 
-		aitable.update();
+		aitable.update(this);
 
 		if(isFull()){
 			catchLove();
@@ -150,7 +150,10 @@ public class Animal extends Living {
 	protected void catchFeed(){
 		collidedList.forEach((col)->{
 			if(col instanceof Living && isFeed((Living)col)){
-				eat((Living)col);
+				if(((Living)col).getType() != LivingType.Plant && !(col.getChunk() instanceof Shelter)){
+					eat((Living)col);
+				}else if(((Living)col).getType() == LivingType.Plant)eat((Living)col);
+
 			}
 		});
 	}

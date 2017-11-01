@@ -53,6 +53,13 @@ public class Pos {
 		else if(y > borderY)setY(borderY);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+    	if(!(obj instanceof Pos))return false;
+    	Pos p = (Pos)obj;
+    	return p.x == x && p.y == y;
+    }
+
 	//get/set---------------------------------
 
 	/**

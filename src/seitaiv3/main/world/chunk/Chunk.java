@@ -35,9 +35,14 @@ public class Chunk {
 	}
 
 	/**フレームごとの更新処理*/
-	public void update(Graphics2D g){
+	public void update(Graphics2D g, boolean timepass){
+		if(timepass){
+			energy++;
+
+		}
 		if(energy > energy_max)energy = energy_max;
 		int l = world.getChunkLength();
+
 		if(world.isInCamera(new Pos(x * l, y * l))
 				|| world.isInCamera(new Pos(x * l + l, y * l))
 				|| world.isInCamera(new Pos(x * l, y * l + l))
